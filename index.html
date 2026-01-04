@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Generador de Google Dorks | Herramienta OSINT Online Gratis</title>
+    <meta name="description" content="Herramienta gratuita para generar Google Dorks automáticamente. Realiza auditorías de ciberseguridad, OSINT y pentesting ético de forma rápida y segura.">
+    <meta name="keywords" content="Google Dorks, OSINT, Hacking Ético, Ciberseguridad, Pentesting, Google Hacking Database, Dorking Tool">
+    <meta name="author" content="TuUsuarioGitHub">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="DorkSearch PRO | Herramienta OSINT">
+    <meta property="og:description" content="Genera búsquedas avanzadas de Google para auditorías de seguridad. 100% Client-side.">
+    <meta property="og:image" content="https://tu-usuario.github.io/tu-repo/preview.jpg"> <meta property="og:url" content="https://tu-usuario.github.io/tu-repo/">
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "¿Qué son los Google Dorks?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Los Google Dorks son comandos de búsqueda avanzada que permiten descubrir información expuesta en internet que no es fácilmente accesible mediante una búsqueda normal."
+        }
+      }, {
+        "@type": "Question",
+        "name": "¿Es legal usar esta herramienta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí. Esta herramienta utiliza operadores públicos de Google. Sin embargo, usar la información encontrada para acceder sin autorización a sistemas privados es ilegal. Úsala solo para auditorías propias o con permiso."
+        }
+      }, {
+        "@type": "Question",
+        "name": "¿Esta herramienta guarda mis búsquedas?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. DorkSearch PRO funciona 100% en el lado del cliente (tue navegador). Ningún dato se envía a ningún servidor externo ni base de datos."
+        }
+      }]
+    }
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Dork<span class="highlight">Search</span>_PRO</h1>
+            <h2>Herramienta Avanzada de Reconocimiento Pasivo (OSINT)</h2>
+        </header>
+
+        <main>
+            <section class="input-section" aria-label="Configuración de búsqueda">
+                <label for="target">Dominio Objetivo:</label>
+                <div class="input-wrapper">
+                    <span class="prefix">site:</span>
+                    <input type="text" id="target" placeholder="ejemplo.com" autocomplete="off">
+                </div>
+                
+                <div id="query-preview" class="query-box hidden">
+                    <code id="query-text">esperando input...</code>
+                    <button id="copy-btn" title="Copiar comando" aria-label="Copiar al portapapeles">
+                        📋 Copiar
+                    </button>
+                </div>
+            </section>
+
+            <section class="dorks-grid" id="dorks-container" aria-label="Categorías de Dorks">
+                </section>
+
+            <section class="custom-dork-section">
+                <h3>🛠️ Constructor Personalizado</h3>
+                <div class="custom-input-group">
+                    <input type="text" id="custom-dork-input" placeholder="Ej: inurl:admin filetype:php" aria-label="Dork personalizado">
+                    <button onclick="runCustomDork()">LANZAR</button>
+                </div>
+            </section>
+        </main>
+
+        <section class="faq-section">
+            <h3>Preguntas Frecuentes (FAQ)</h3>
+            
+            <details>
+                <summary>¿Qué es el Google Dorking y para qué sirve?</summary>
+                <p>El <strong>Google Hacking</strong> o Dorking es una técnica de informática que utiliza operadores avanzados de búsqueda para encontrar agujeros de seguridad en la configuración de servidores y aplicaciones web.</p>
+            </details>
+
+            <details>
+                <summary>¿Cómo funciona esta herramienta OSINT?</summary>
+                <p>Este script automatiza la sintaxis. Tú ingresas el dominio y la herramienta concatena los operadores correctos (como <code>filetype</code>, <code>inurl</code>, <code>intitle</code>) para filtrar los resultados en Google.</p>
+            </details>
+
+            <details>
+                <summary>¿Es seguro usar DorkSearch?</summary>
+                <p>Totalmente. El código es <strong>Open Source</strong> y estático. Puedes revisar el repositorio en GitHub para verificar que no hay rastreadores ni scripts maliciosos.</p>
+            </details>
+        </section>
+
+        <footer>
+            <p>🛡️ <strong>Descargo de responsabilidad:</strong> Herramienta diseñada para auditorías de seguridad ética y propósitos educativos.</p>
+            <p>Desarrollado con ❤️ y JavaScript plano.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
