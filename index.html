@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MHWF85ZZ24"></script>
     <script>
@@ -12,13 +12,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Generador de Google Dorks | Herramienta OSINT Online Gratis</title>
-    <meta name="description" content="Herramienta gratuita para generar Google Dorks automáticamente. Realiza auditorías de ciberseguridad, OSINT y pentesting ético de forma rápida y segura.">
-    <meta name="keywords" content="Google Dorks, OSINT, Hacking Ético, Ciberseguridad, Pentesting, Google Hacking Database, Dorking Tool">
-    <meta name="author" content="TuUsuarioGitHub"> <meta name="robots" content="index, follow">
+    <title>Google Dorks Generator | Free Online OSINT Tool</title>
+    <meta name="description" content="Free tool to automatically generate Google Dorks. Perform cybersecurity audits, OSINT, and ethical pentesting quickly and safely.">
+    <meta name="keywords" content="Google Dorks, OSINT, Ethical Hacking, Cybersecurity, Pentesting, Google Hacking Database, Dorking Tool">
+    <meta name="author" content="YourGitHubUser"> <meta name="robots" content="index, follow">
 
-    <meta property="og:title" content="DorkSearch PRO | Herramienta OSINT">
-    <meta property="og:description" content="Genera búsquedas avanzadas de Google para auditorías de seguridad. 100% Client-side.">
+    <meta property="og:title" content="DorkSearch PRO | OSINT Tool">
+    <meta property="og:description" content="Generate advanced Google searches for security audits. 100% Client-side.">
     <meta property="og:url" content="https://tu-usuario.github.io/osint-dork-search/">
     <meta property="og:type" content="website">
 
@@ -33,24 +33,24 @@
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "¿Qué son los Google Dorks?",
+        "name": "What are Google Dorks?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Los Google Dorks son comandos de búsqueda avanzada que permiten descubrir información expuesta en internet que no es fácilmente accesible mediante una búsqueda normal."
+          "text": "Google Dorks are advanced search commands that allow you to discover information exposed on the internet that is not easily accessible through a standard search."
         }
       }, {
         "@type": "Question",
-        "name": "¿Es legal usar esta herramienta?",
+        "name": "Is it legal to use this tool?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Sí. Esta herramienta utiliza operadores públicos de Google. Sin embargo, usar la información encontrada para acceder sin autorización a sistemas privados es ilegal. Úsala solo para auditorías propias o con permiso."
+          "text": "Yes. This tool uses public Google operators. However, using the found information to access private systems without authorization is illegal. Use it only for your own audits or with permission."
         }
       }, {
         "@type": "Question",
-        "name": "¿Esta herramienta guarda mis búsquedas?",
+        "name": "Does this tool save my searches?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. DorkSearch PRO funciona 100% en el lado del cliente (tue navegador). Ningún dato se envía a ningún servidor externo ni base de datos."
+          "text": "No. DorkSearch PRO works 100% on the client-side (your browser). No data is sent to any external server or database."
         }
       }]
     }
@@ -60,64 +60,63 @@
 
     <div class="container">
         <header>
-            <h1>Dork<span class="highlight">Search</span>PRO</h1>
-            <h2>Herramienta Avanzada de Reconocimiento Pasivo (OSINT)</h2>
+            <h1>Dork<span class="highlight">Search</span>_PRO</h1>
+            <h2>Advanced Passive Reconnaissance Tool (OSINT)</h2>
         </header>
 
         <main>
-            <section class="input-section" aria-label="Configuración de búsqueda">
-                <label for="target">Dominio Objetivo:</label>
+            <section class="input-section" aria-label="Search Configuration">
+                <label for="target">Target Domain:</label>
                 <div class="input-wrapper">
                     <span class="prefix">site:</span>
-                    <input type="text" id="target" placeholder="ejemplo.com" autocomplete="off">
+                    <input type="text" id="target" placeholder="example.com" autocomplete="off">
                 </div>
                 
                 <div id="query-preview" class="query-box hidden">
-                    <code id="query-text">esperando input...</code>
-                    <button id="copy-btn" title="Copiar comando" aria-label="Copiar al portapapeles">
-                        📋 Copiar
+                    <code id="query-text">waiting for input...</code>
+                    <button id="copy-btn" title="Copy command" aria-label="Copy to clipboard">
+                        📋 Copy
                     </button>
                 </div>
             </section>
 
-            <section class="dorks-grid" id="dorks-container" aria-label="Categorías de Dorks">
+            <section class="dorks-grid" id="dorks-container" aria-label="Dork Categories">
                 </section>
 
             <section class="custom-dork-section">
-                <h3>🛠️ Constructor Personalizado</h3>
+                <h3>🛠️ Custom Builder</h3>
                 <div class="custom-input-group">
-                    <input type="text" id="custom-dork-input" placeholder="Ej: inurl:admin filetype:php" aria-label="Dork personalizado">
-                    <button onclick="runCustomDork()">LANZAR</button>
+                    <input type="text" id="custom-dork-input" placeholder="Ex: inurl:admin filetype:php" aria-label="Custom Dork">
+                    <button onclick="runCustomDork()">LAUNCH</button>
                 </div>
             </section>
         </main>
 
         <section class="faq-section">
-            <h3>Preguntas Frecuentes (FAQ)</h3>
+            <h3>Frequently Asked Questions (FAQ)</h3>
             
             <details>
-                <summary>¿Qué es el Google Dorking y para qué sirve?</summary>
-                <p>El <strong>Google Hacking</strong> o Dorking es una técnica de informática que utiliza operadores avanzados de búsqueda para encontrar agujeros de seguridad en la configuración de servidores y aplicaciones web.</p>
+                <summary>What is Google Dorking and what is it for?</summary>
+                <p><strong>Google Hacking</strong> or Dorking is a technique that uses advanced search operators to find security holes in server configurations and web applications.</p>
             </details>
 
             <details>
-                <summary>¿Cómo funciona esta herramienta OSINT?</summary>
-                <p>Este script automatiza la sintaxis. Tú ingresas el dominio y la herramienta concatena los operadores correctos (como <code>filetype</code>, <code>inurl</code>, <code>intitle</code>) para filtrar los resultados en Google.</p>
+                <summary>How does this OSINT tool work?</summary>
+                <p>This script automates the syntax. You enter the domain, and the tool concatenates the correct operators (like <code>filetype</code>, <code>inurl</code>, <code>intitle</code>) to filter the results on Google.</p>
             </details>
 
             <details>
-                <summary>¿Es seguro usar DorkSearch?</summary>
-                <p>Totalmente. El código es <strong>Open Source</strong> y estático. Puedes revisar el repositorio en GitHub para verificar que no hay rastreadores ni scripts maliciosos.</p>
+                <summary>Is it safe to use DorkSearch?</summary>
+                <p>Totally. The code is <strong>Open Source</strong> and static. You can check the repository on GitHub to verify there are no trackers or malicious scripts.</p>
             </details>
         </section>
 
         <footer>
-            <p>🛡️ <strong>Descargo de responsabilidad:</strong> Herramienta diseñada para auditorías de seguridad ética y propósitos educativos.</p>
-            <p>Desarrollado con ❤️ y JavaScript plano.</p>
+            <p>🛡️ <strong>Disclaimer:</strong> Tool designed for ethical security audits and educational purposes.</p>
+            <p>Developed with ❤️ and vanilla JavaScript.</p>
         </footer>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
