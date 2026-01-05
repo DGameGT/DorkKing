@@ -1,31 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MHWF85ZZ24"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-MHWF85ZZ24');
     </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <title>Google Dorks Generator | Free Online OSINT Tool</title>
-    <meta name="description" content="Free tool to automatically generate Google Dorks. Perform cybersecurity audits, OSINT, and ethical pentesting quickly and safely.">
-    <meta name="keywords" content="Google Dorks, OSINT, Ethical Hacking, Cybersecurity, Pentesting, Google Hacking Database, Dorking Tool">
-    <meta name="author" content="YourGitHubUser"> <meta name="robots" content="index, follow">
+    <!-- Primary Meta Tags -->
+    <title>Google Dorks Generator - Free OSINT Tool for Security Research | DorkSearch PRO</title>
+    <meta name="title" content="Google Dorks Generator - Free OSINT Tool for Security Research | DorkSearch PRO">
+    <meta name="description" content="Free advanced Google Dorks generator for OSINT investigations, cybersecurity audits, and ethical pentesting. Discover exposed files, admin panels, and security vulnerabilities with 100% client-side processing.">
+    <meta name="keywords" content="google dorks, google hacking database, osint tool, dorking, cybersecurity audit, penetration testing, ethical hacking, security research, google search operators, information gathering, reconnaissance tool, ghdb">
+    <meta name="author" content="DorkSearch PRO">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://mitocondria40.github.io/OSINT-dork-tool/">
 
-    <meta property="og:title" content="DorkSearch PRO | OSINT Tool">
-    <meta property="og:description" content="Generate advanced Google searches for security audits. 100% Client-side.">
-    <meta property="og:url" content="https://tu-usuario.github.io/osint-dork-search/">
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mitocondria40.github.io/OSINT-dork-tool/">
+    <meta property="og:title" content="DorkSearch PRO - Advanced Google Dorks Generator for OSINT">
+    <meta property="og:description" content="Free tool to generate advanced Google searches for security audits. Find exposed files, admin panels, and vulnerabilities. 100% Client-side & Open Source.">
+    <meta property="og:image" content="https://mitocondria40.github.io/OSINT-dork-tool/og-image.png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="DorkSearch PRO">
 
-    <link rel="stylesheet" href="style.css">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://mitocondria40.github.io/OSINT-dork-tool/">
+    <meta property="twitter:title" content="DorkSearch PRO - Google Dorks Generator for Security Research">
+    <meta property="twitter:description" content="Generate advanced Google dorks for OSINT and security audits. Free, open-source, and privacy-focused.">
+    <meta property="twitter:image" content="https://mitocondria40.github.io/OSINT-dork-tool/twitter-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://www.google-analytics.com">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "DorkSearch PRO",
+      "description": "Advanced Google Dorks generator for OSINT investigations and cybersecurity research",
+      "url": "https://mitocondria40.github.io/OSINT-dork-tool/",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Google Dorks Generation",
+        "File Discovery",
+        "Admin Panel Detection",
+        "Configuration Files Search",
+        "Custom Dork Builder",
+        "100% Client-side Processing"
+      ]
+    }
+    </script>
 
     <script type="application/ld+json">
     {
@@ -33,43 +87,92 @@
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "What are Google Dorks?",
+        "name": "What are Google Dorks and how do they work?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Google Dorks are advanced search commands that allow you to discover information exposed on the internet that is not easily accessible through a standard search."
+          "text": "Google Dorks are advanced search operators that allow security researchers and penetration testers to discover information exposed on the internet that isn't easily accessible through standard searches. They use special commands like 'filetype:', 'inurl:', 'site:', and 'intitle:' to filter Google results and find sensitive files, admin panels, configuration files, and potential security vulnerabilities."
         }
       }, {
         "@type": "Question",
-        "name": "Is it legal to use this tool?",
+        "name": "Is it legal to use Google Dorking tools?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. This tool uses public Google operators. However, using the found information to access private systems without authorization is illegal. Use it only for your own audits or with permission."
+          "text": "Yes, using Google Dorks and dorking tools is completely legal as they only utilize public Google search operators to find publicly indexed information. However, accessing or exploiting private systems without authorization is illegal. This tool should only be used for authorized security audits, ethical penetration testing, OSINT research, or educational purposes."
         }
       }, {
         "@type": "Question",
-        "name": "Does this tool save my searches?",
+        "name": "Does DorkSearch PRO store my search data or target domains?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. DorkSearch PRO works 100% on the client-side (your browser). No data is sent to any external server or database."
+          "text": "No. DorkSearch PRO is 100% client-side, meaning all processing happens in your browser. No data is sent to external servers or stored in any database. Your searches and target domains remain completely private."
         }
+      }, {
+        "@type": "Question",
+        "name": "What can I find using Google Dorks?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "With Google Dorks you can discover: exposed PDF, Excel, and Word documents; configuration files; database backups; admin login panels; directory listings; error logs; .git folders; environment files; and many other sensitive resources that may have been unintentionally exposed to public indexing."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How is this tool different from manual Google searches?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DorkSearch PRO automates the creation of complex Google Dork queries by combining the proper operators and syntax automatically. Instead of manually typing 'site:example.com filetype:pdf', you simply enter your target domain and click the desired search category. This saves time and ensures proper syntax for effective results."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Use Google Dorks for OSINT Research",
+      "description": "Step-by-step guide to using DorkSearch PRO for security reconnaissance",
+      "step": [{
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Enter Target Domain",
+        "text": "Type the target domain in the input field (e.g., example.com)"
+      }, {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Select Dork Category",
+        "text": "Choose from predefined categories like Files & Documents, Server Configuration, or Entry Points"
+      }, {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Execute Search",
+        "text": "Click on a specific dork button to generate and execute the Google search query"
+      }, {
+        "@type": "HowToStep",
+        "position": 4,
+        "name": "Analyze Results",
+        "text": "Review the Google search results for exposed files, directories, or potential security issues"
       }]
     }
     </script>
 </head>
 <body>
-
     <div class="container">
         <header>
-            <h1>Dork<span class="highlight">Search</span>_PRO</h1>
-            <h2>Advanced Passive Reconnaissance Tool (OSINT)</h2>
+            <h1>Dork<span class="highlight">Search</span>PRO</h1>
+            <p class="subtitle">Advanced Passive Reconnaissance Tool for OSINT & Security Research</p>
+            <p class="tagline">Generate powerful Google Dorks instantly • 100% Client-Side • Open Source</p>
         </header>
 
         <main>
+            <!-- Target Input Section -->
             <section class="input-section" aria-label="Search Configuration">
-                <label for="target">Target Domain:</label>
+                <label for="target">Target Domain or Website:</label>
                 <div class="input-wrapper">
                     <span class="prefix">site:</span>
-                    <input type="text" id="target" placeholder="example.com" autocomplete="off">
+                    <input type="text" 
+                           id="target" 
+                           placeholder="example.com" 
+                           autocomplete="off"
+                           aria-label="Enter target domain">
                 </div>
                 
                 <div id="query-preview" class="query-box hidden">
@@ -80,40 +183,91 @@
                 </div>
             </section>
 
-            <section class="dorks-grid" id="dorks-container" aria-label="Dork Categories">
-                </section>
+            <!-- Dorks Categories Grid -->
+            <section class="dorks-grid" id="dorks-container" aria-label="Google Dork Categories">
+                <!-- Dynamically generated by JavaScript -->
+            </section>
 
+            <!-- Custom Dork Builder -->
             <section class="custom-dork-section">
-                <h3>🛠️ Custom Builder</h3>
+                <h3>🛠️ Custom Dork Builder</h3>
+                <p class="section-description">Create your own custom Google Dork query using advanced operators</p>
                 <div class="custom-input-group">
-                    <input type="text" id="custom-dork-input" placeholder="Ex: inurl:admin filetype:php" aria-label="Custom Dork">
-                    <button onclick="runCustomDork()">LAUNCH</button>
+                    <input type="text" 
+                           id="custom-dork-input" 
+                           placeholder="Example: inurl:admin filetype:php" 
+                           aria-label="Custom Dork Query">
+                    <button onclick="runCustomDork()" aria-label="Execute custom dork">LAUNCH SEARCH</button>
                 </div>
+            </section>
+
+            <!-- Info Section -->
+            <section class="info-section">
+                <h2>What is Google Dorking?</h2>
+                <p><strong>Google Dorking</strong> (also known as Google Hacking) is an OSINT technique that uses advanced search operators to uncover security vulnerabilities, exposed sensitive files, and misconfigurations in web servers and applications. Security researchers, penetration testers, and cybersecurity professionals use Google Dorks to perform passive reconnaissance and identify potential attack vectors before malicious actors do.</p>
+                
+                <h3>Common Google Dork Operators:</h3>
+                <ul class="operators-list">
+                    <li><code>site:</code> - Limits results to a specific domain or website</li>
+                    <li><code>filetype:</code> - Searches for specific file extensions (pdf, doc, xls, sql, etc.)</li>
+                    <li><code>inurl:</code> - Finds pages with specific terms in the URL</li>
+                    <li><code>intitle:</code> - Searches for specific words in page titles</li>
+                    <li><code>intext:</code> - Looks for specific text within page content</li>
+                    <li><code>cache:</code> - Shows Google's cached version of a page</li>
+                </ul>
             </section>
         </main>
 
+        <!-- FAQ Section for SEO -->
         <section class="faq-section">
-            <h3>Frequently Asked Questions (FAQ)</h3>
+            <h2>Frequently Asked Questions (FAQ)</h2>
             
             <details>
-                <summary>What is Google Dorking and what is it for?</summary>
-                <p><strong>Google Hacking</strong> or Dorking is a technique that uses advanced search operators to find security holes in server configurations and web applications.</p>
+                <summary>What are Google Dorks and how do they work?</summary>
+                <p><strong>Google Dorks</strong> are advanced search operators that allow security researchers and penetration testers to discover information exposed on the internet that isn't easily accessible through standard searches. They use special commands like <code>filetype:</code>, <code>inurl:</code>, <code>site:</code>, and <code>intitle:</code> to filter Google results and find sensitive files, admin panels, configuration files, and potential security vulnerabilities.</p>
             </details>
 
             <details>
-                <summary>How does this OSINT tool work?</summary>
-                <p>This script automates the syntax. You enter the domain, and the tool concatenates the correct operators (like <code>filetype</code>, <code>inurl</code>, <code>intitle</code>) to filter the results on Google.</p>
+                <summary>Is it legal to use Google Dorking tools?</summary>
+                <p>Yes, using Google Dorks and dorking tools is completely legal as they only utilize public Google search operators to find publicly indexed information. However, accessing or exploiting private systems without authorization is illegal. This tool should only be used for authorized security audits, ethical penetration testing, OSINT research, or educational purposes.</p>
             </details>
 
             <details>
-                <summary>Is it safe to use DorkSearch?</summary>
-                <p>Totally. The code is <strong>Open Source</strong> and static. You can check the repository on GitHub to verify there are no trackers or malicious scripts.</p>
+                <summary>Does DorkSearch PRO store my search data or target domains?</summary>
+                <p>No. DorkSearch PRO is <strong>100% client-side</strong>, meaning all processing happens in your browser. No data is sent to external servers or stored in any database. Your searches and target domains remain completely private. You can verify this by inspecting the open-source code on GitHub.</p>
+            </details>
+
+            <details>
+                <summary>What can I find using Google Dorks?</summary>
+                <p>With Google Dorks you can discover: exposed PDF, Excel, and Word documents; configuration files (.xml, .conf, .env); database backups (.sql, .bak); admin login panels; directory listings; error logs; .git folders; environment files; and many other sensitive resources that may have been unintentionally exposed to public indexing.</p>
+            </details>
+
+            <details>
+                <summary>How is this tool different from manual Google searches?</summary>
+                <p>DorkSearch PRO automates the creation of complex Google Dork queries by combining the proper operators and syntax automatically. Instead of manually typing <code>site:example.com filetype:pdf</code>, you simply enter your target domain and click the desired search category. This saves time and ensures proper syntax for effective results.</p>
+            </details>
+
+            <details>
+                <summary>Can I use this for bug bounty programs?</summary>
+                <p>Absolutely! Google Dorking is a fundamental reconnaissance technique in bug bounty hunting. DorkSearch PRO helps you quickly identify potentially vulnerable endpoints, exposed sensitive files, and misconfigured resources on your target domains. Always ensure you have proper authorization before testing.</p>
+            </details>
+
+            <details>
+                <summary>What is the Google Hacking Database (GHDB)?</summary>
+                <p>The <strong>Google Hacking Database (GHDB)</strong> is a comprehensive repository of Google Dorks compiled by security researchers. It categorizes dorks by vulnerability type and attack vector. DorkSearch PRO implements many common GHDB patterns while providing an intuitive interface for custom searches.</p>
+            </details>
+
+            <details>
+                <summary>Is DorkSearch PRO open source?</summary>
+                <p>Yes! DorkSearch PRO is completely open source. You can review, fork, and contribute to the code on GitHub. The entire application runs client-side with vanilla JavaScript, HTML, and CSS—no frameworks, no trackers, no hidden code.</p>
             </details>
         </section>
 
+        <!-- Footer -->
         <footer>
-            <p>🛡️ <strong>Disclaimer:</strong> Tool designed for ethical security audits and educational purposes.</p>
-            <p>Developed with ❤️ and vanilla JavaScript.</p>
+            <p>🛡️ <strong>Disclaimer:</strong> This tool is designed exclusively for ethical security audits, authorized penetration testing, and educational purposes. Unauthorized access to computer systems is illegal and punishable by law.</p>
+            <p>Developed with ❤️ using vanilla JavaScript • <a href="https://github.com/mitocondria40/OSINT-dork-tool" target="_blank" rel="noopener noreferrer">View on GitHub</a></p>
+            <p class="copyright">© 2025 DorkSearch PRO - All rights reserved</p>
         </footer>
     </div>
 
