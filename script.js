@@ -1,14 +1,7 @@
-// ===========================================================================
-// DorkSearch PRO - Enhanced JavaScript
-// ===========================================================================
 
-// CONFIGURATION: Google Dorks Database - Comprehensive Collection
-// CORRECCIÓN AQUÍ: Renombrado a 'dorksData' para coincidir con la función de abajo
 const dorksData = [
 
-/* ============================
-📂 FILES & DOCUMENTS
-============================ */
+
 {
   category: "📂 Files & Documents",
   items: [
@@ -22,9 +15,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-⚙️ SERVER & CONFIG
-============================ */
+
 {
   category: "⚙️ Server & Config",
   items: [
@@ -38,9 +29,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🐞 BUG BOUNTY & VULNS
-============================ */
+
 {
   category: "🐞 Bug Bounty & Vulnerabilities",
   items: [
@@ -55,9 +44,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-☁️ CLOUD & DEVOPS
-============================ */
+
 {
   category: "☁️ Cloud & DevOps",
   items: [
@@ -71,9 +58,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🗄️ DATABASE & BACKUPS
-============================ */
+
 {
   category: "🗄️ Databases & Backups",
   items: [
@@ -86,9 +71,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🔑 CREDENTIALS & SECRETS
-============================ */
+
 {
   category: "🔑 Credentials & Secrets",
   items: [
@@ -101,9 +84,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🧠 SOURCE CODE & LEAKS
-============================ */
+
 {
   category: "🧠 Source Code & Leaks",
   items: [
@@ -114,9 +95,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🧪 DEBUG & DEV
-============================ */
+
 {
   category: "🧪 Debug & Dev Environments",
   items: [
@@ -127,9 +106,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-📡 NETWORK & INFRA
-============================ */
+
 {
   category: "📡 Network & Infrastructure",
   items: [
@@ -140,9 +117,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🕵️ PEOPLE & OSINT
-============================ */
+
 {
   category: "🕵️ People & Identity OSINT",
   items: [
@@ -153,9 +128,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🎯 OSINT & RECON
-============================ */
+
 {
   category: "🎯 OSINT & Recon",
   items: [
@@ -167,9 +140,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🧠 ADVANCED OPERATORS
-============================ */
+
 {
   category: "🧠 Advanced Operators",
   items: [
@@ -181,9 +152,7 @@ const dorksData = [
   ]
 },
 
-/* ============================
-🧯 BREACH & INCIDENT INTEL
-============================ */
+
 {
   category: "🧯 Breach & Incident Intelligence",
   items: [
@@ -195,9 +164,7 @@ const dorksData = [
 
 ];
 
-// ===========================================================================
-// INITIALIZATION
-// ===========================================================================
+
 
 document.addEventListener('DOMContentLoaded', () => {
   renderButtons();
@@ -205,13 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupAccessibility();
 });
 
-// ===========================================================================
-// RENDER FUNCTIONS
-// ===========================================================================
 
-/**
- * Dynamically generates dork category cards and buttons
- */
 function renderButtons() {
   const container = document.getElementById('dorks-container');
   
@@ -220,10 +181,8 @@ function renderButtons() {
     return;
   }
   
-  // Clear container to prevent duplicates
   container.innerHTML = ''; 
   
-  // CORRECCIÓN: Ahora lee la variable 'dorksData' correctamente
   dorksData.forEach(category => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -247,14 +206,11 @@ function renderButtons() {
   });
 }
 
-/**
- * Sets up additional event listeners
- */
+
 function setupEventListeners() {
   const targetInput = document.getElementById('target');
   const customInput = document.getElementById('custom-dork-input');
   
-  // Allow Enter key to trigger custom dork
   if (customInput) {
     customInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
@@ -263,7 +219,6 @@ function setupEventListeners() {
     });
   }
   
-  // Clean domain input on blur
   if (targetInput) {
     targetInput.addEventListener('blur', () => {
       const value = targetInput.value.trim();
@@ -274,11 +229,8 @@ function setupEventListeners() {
   }
 }
 
-/**
- * Improves accessibility for screen readers
- */
+
 function setupAccessibility() {
-  // Add live region for screen readers if it doesn't exist
   if (!document.getElementById('aria-live-region')) {
     const liveRegion = document.createElement('div');
     liveRegion.setAttribute('aria-live', 'polite');
@@ -289,26 +241,17 @@ function setupAccessibility() {
   }
 }
 
-// ===========================================================================
-// CORE FUNCTIONALITY
-// ===========================================================================
 
-/**
- * Main function: Updates query preview and executes Google search
- * @param {string} dorkQuery - The dork query to execute
- */
 function updateAndSearch(dorkQuery) {
   const targetInput = document.getElementById('target');
   let domain = targetInput.value.trim();
 
-  // Validation
   if (!domain) {
     showNotification('⚠️ Error: Please enter a target domain first.', 'error');
     targetInput.focus();
     return;
   }
 
-  // Clean and validate domain
   domain = cleanDomain(domain);
   
   if (!isValidDomain(domain)) {
@@ -317,34 +260,24 @@ function updateAndSearch(dorkQuery) {
     return;
   }
   
-  // Update input with cleaned domain
   targetInput.value = domain;
 
-  // INTELLIGENT QUERY BUILDER
   let fullQuery = "";
   
-  // Si el dork empieza por "site:", es una búsqueda externa (ej: site:linkedin.com)
-  // En este caso, buscamos el dominio DEL USUARIO dentro de ESE sitio.
   if (dorkQuery.startsWith("site:")) {
     fullQuery = `${dorkQuery} "${domain}"`;
   } else {
-    // Comportamiento normal: Buscar dentro del dominio del usuario
     fullQuery = `site:${domain} ${dorkQuery}`;
   }
 
-  // Update UI with query preview
   updateQueryPreview(fullQuery);
 
-  // Execute Google search
   executeSearch(fullQuery);
   
-  // Announce to screen readers
   announceToScreenReader(`Searching for ${dorkQuery} on ${domain}`);
 }
 
-/**
- * Executes custom dork query
- */
+
 function runCustomDork() {
   const customInput = document.getElementById('custom-dork-input');
   const customDork = customInput.value.trim();
@@ -355,7 +288,6 @@ function runCustomDork() {
     return;
   }
 
-  // If user already included 'site:domain', search directly
   if (customDork.includes('site:')) {
     executeSearch(customDork);
     updateQueryPreview(customDork);
@@ -364,43 +296,24 @@ function runCustomDork() {
   }
 }
 
-// ===========================================================================
-// UTILITY FUNCTIONS
-// ===========================================================================
 
-/**
- * Cleans and normalizes domain input
- * @param {string} domain - Raw domain input
- * @returns {string} Cleaned domain
- */
 function cleanDomain(domain) {
-  // Remove protocol (http://, https://)
   domain = domain.replace(/^(https?:\/\/)?(www\.)?/, '');
   
-  // Remove paths and query strings
   domain = domain.replace(/\/.*$/, '');
   
-  // Remove trailing dots
   domain = domain.replace(/\.$/, '');
   
   return domain.toLowerCase();
 }
 
-/**
- * Validates domain format
- * @param {string} domain - Domain to validate
- * @returns {boolean} True if valid
- */
+
 function isValidDomain(domain) {
-  // Basic domain validation regex
   const domainRegex = /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,}$/i;
   return domainRegex.test(domain);
 }
 
-/**
- * Updates the query preview box
- * @param {string} query - The query to display
- */
+
 function updateQueryPreview(query) {
   const previewBox = document.getElementById('query-preview');
   const queryText = document.getElementById('query-text');
@@ -410,20 +323,15 @@ function updateQueryPreview(query) {
   previewBox.classList.remove('hidden');
   queryText.textContent = query;
 
-  // Setup copy button
   setupCopyButton(query);
 }
 
-/**
- * Sets up the copy-to-clipboard functionality
- * @param {string} text - Text to copy
- */
+
 function setupCopyButton(text) {
   const copyBtn = document.getElementById('copy-btn');
   
   if (!copyBtn) return;
   
-  // Remove old listeners to avoid duplicates if re-initialized
   const newBtn = copyBtn.cloneNode(true);
   copyBtn.parentNode.replaceChild(newBtn, copyBtn);
   
@@ -446,54 +354,38 @@ function setupCopyButton(text) {
   };
 }
 
-/**
- * Executes Google search in new tab
- * @param {string} query - Search query
- */
+
 function executeSearch(query) {
   const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
   
-  // Create a temporary link and click it programmatically
   const link = document.createElement('a');
   link.href = googleUrl;
   link.target = '_blank';
   link.rel = 'noopener noreferrer';
   
-  // Append to body, click, and remove
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
 
-/**
- * Shows notification to user
- * @param {string} message - Notification message
- * @param {string} type - Notification type (error, warning, success)
- */
+
 function showNotification(message, type = 'info') {
   alert(message);
   announceToScreenReader(message);
 }
 
-/**
- * Announces message to screen readers
- * @param {string} message - Message to announce
- */
+
 function announceToScreenReader(message) {
   const liveRegion = document.getElementById('aria-live-region');
   if (liveRegion) {
     liveRegion.textContent = message;
-    // Clear after announcement
     setTimeout(() => {
       liveRegion.textContent = '';
     }, 1000);
   }
 }
 
-// ===========================================================================
-// EXPORT FOR INLINE USAGE
-// ===========================================================================
 
-// Make functions available globally for onclick handlers
 window.updateAndSearch = updateAndSearch;
 window.runCustomDork = runCustomDork;
+
