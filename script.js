@@ -3,7 +3,7 @@ const dorksData = [
 
 
 {
-  category: "📂 Files & Documents",
+  category: " Files & Documents",
   items: [
     { label: "Public PDFs", dork: "filetype:pdf" },
     { label: "Excel Data", dork: "filetype:xls OR filetype:xlsx OR filetype:csv" },
@@ -17,7 +17,7 @@ const dorksData = [
 
 
 {
-  category: "⚙️ Server & Config",
+  category: " Server & Config",
   items: [
     { label: "Directory Listing", dork: "intitle:\"index of\"" },
     { label: "Config Files", dork: "filetype:xml OR filetype:conf OR filetype:cnf OR filetype:ini OR filetype:env" },
@@ -31,7 +31,7 @@ const dorksData = [
 
 
 {
-  category: "🐞 Bug Bounty & Vulnerabilities",
+  category: " Bug Bounty & Vulnerabilities",
   items: [
     { label: "Open Redirect", dork: "inurl:redir OR inurl:redirect= OR inurl:return= OR inurl:next=" },
     { label: "XSS Parameters", dork: "inurl:q= OR inurl:search= OR inurl:s= OR inurl:lang=" },
@@ -46,7 +46,7 @@ const dorksData = [
 
 
 {
-  category: "☁️ Cloud & DevOps",
+  category: " Cloud & DevOps",
   items: [
     { label: "AWS S3 Buckets", dork: "intext:\"s3.amazonaws.com\"" },
     { label: "Azure Blob Storage", dork: "inurl:blob.core.windows.net" },
@@ -60,7 +60,7 @@ const dorksData = [
 
 
 {
-  category: "🗄️ Databases & Backups",
+  category: " Databases & Backups",
   items: [
     { label: "SQL Dumps", dork: "filetype:sql intext:\"CREATE TABLE\"" },
     { label: "Database Backups", dork: "filetype:bak OR filetype:dump" },
@@ -73,7 +73,7 @@ const dorksData = [
 
 
 {
-  category: "🔑 Credentials & Secrets",
+  category: " Credentials & Secrets",
   items: [
     { label: "API Keys", dork: "intext:\"api_key\" OR intext:\"client_secret\"" },
     { label: "AWS Keys", dork: "intext:\"AKIA\" OR intext:\"aws_access_key_id\"" },
@@ -86,7 +86,7 @@ const dorksData = [
 
 
 {
-  category: "🧠 Source Code & Leaks",
+  category: " Source Code & Leaks",
   items: [
     { label: "Exposed Source Code", dork: "filetype:php OR filetype:js OR filetype:py OR filetype:java" },
     { label: "Backup Source Files", dork: "filetype:old OR filetype:bak OR filetype:swp" },
@@ -97,7 +97,7 @@ const dorksData = [
 
 
 {
-  category: "🧪 Debug & Dev Environments",
+  category: " Debug & Dev Environments",
   items: [
     { label: "Debug Enabled", dork: "APP_DEBUG=true OR debug=true" },
     { label: "Test / Dev Sites", dork: "inurl:test OR inurl:dev OR inurl:staging" },
@@ -108,7 +108,7 @@ const dorksData = [
 
 
 {
-  category: "📡 Network & Infrastructure",
+  category: " Network & Infrastructure",
   items: [
     { label: "Open Web Ports", dork: "inurl:8080 OR inurl:8443 OR inurl:9200" },
     { label: "Elasticsearch", dork: "intitle:\"You Know, for Search\"" },
@@ -119,7 +119,7 @@ const dorksData = [
 
 
 {
-  category: "🕵️ People & Identity OSINT",
+  category: " People & Identity OSINT",
   items: [
     { label: "Employee Lists", dork: "filetype:xls intext:employee" },
     { label: "Phone Directories", dork: "filetype:pdf intext:\"phone directory\"" },
@@ -130,7 +130,7 @@ const dorksData = [
 
 
 {
-  category: "🎯 OSINT & Recon",
+  category: " OSINT & Recon",
   items: [
     { label: "Subdomains", dork: "-www" },
     { label: "Wayback Machine", dork: "site:web.archive.org" },
@@ -142,7 +142,7 @@ const dorksData = [
 
 
 {
-  category: "🧠 Advanced Operators",
+  category: " Advanced Operators",
   items: [
     { label: "Cached Pages", dork: "cache:" },
     { label: "Related Sites", dork: "related:" },
@@ -154,7 +154,7 @@ const dorksData = [
 
 
 {
-  category: "🧯 Breach & Incident Intelligence",
+  category: " Breach & Incident Intelligence",
   items: [
     { label: "Data Breach Reports", dork: "intext:\"data breach\"" },
     { label: "Ransomware Victims", dork: "intext:ransomware filetype:pdf" },
@@ -388,4 +388,5 @@ function announceToScreenReader(message) {
 
 window.updateAndSearch = updateAndSearch;
 window.runCustomDork = runCustomDork;
+
 
