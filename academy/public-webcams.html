@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunting Public Webcams & IoT Devices - Dork King Academy</title>
+    <meta name="description" content="Teknik OSINT untuk menemukan kamera CCTV terbuka, printer, dan perangkat pintar (IoT) menggunakan Google Dorks.">
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Roboto Mono', monospace; line-height: 1.8; }
+        .article-container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        .breadcrumb { margin-bottom: 40px; font-size: 0.95rem; color: #8b949e; }
+        .breadcrumb a { color: #58a6ff; text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: #79c0ff; text-decoration: underline; }
+        
+        h1 { font-size: 2.8rem; color: #fff; margin-bottom: 15px; line-height: 1.1; font-weight: 700; }
+        .meta-info { color: #8b949e; margin-bottom: 50px; border-bottom: 1px solid #30363d; padding-bottom: 30px; font-size: 0.9rem; }
+        
+        h2 { color: #fff; margin-top: 60px; margin-bottom: 25px; border-left: 5px solid #2ea043; padding-left: 20px; font-size: 1.8rem; }
+        h3 { color: #79c0ff; margin-top: 30px; margin-bottom: 10px; font-size: 1.3rem; }
+        
+        p, li { font-size: 1.05rem; }
+        
+        pre { background: #161b22; padding: 20px; border-radius: 8px; border: 1px solid #30363d; overflow-x: auto; margin: 25px 0; }
+        code { background: rgba(110, 118, 129, 0.4); padding: 0.2em 0.4em; border-radius: 6px; font-family: 'Courier New', monospace; color: #e2b340; }
+        pre code { background: none; padding: 0; color: #c9d1d9; font-size: 0.95rem; }
+
+        .note-box { background: rgba(22, 27, 34, 0.8); border: 1px solid #30363d; padding: 25px; border-radius: 8px; margin: 35px 0; }
+        
+        .cta-box { background: linear-gradient(145deg, rgba(46, 160, 67, 0.1), rgba(22, 27, 34, 0.5)); border: 1px solid #2ea043; padding: 40px; text-align: center; border-radius: 12px; margin: 60px 0; }
+        .cta-btn { display: inline-block; background: #238636; color: #fff; padding: 15px 35px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 25px; font-size: 1.1rem; transition: all 0.2s; }
+        .cta-btn:hover { background: #2ea043; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+    <div class="article-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> / <a href="index.html">Academy</a> / Public Cams
+        </div>
+
+        <article>
+            <h1>Menemukan Webcam Publik & Perangkat IoT</h1>
+            <div class="meta-info">
+                Diupdate: 11 Januari 2026 • Kategori: <strong>IoT Security</strong> • Level: <strong>Pemula</strong>
+            </div>
+
+            <p>Internet of Things (IoT) telah menghubungkan segalanya ke internet: CCTV, printer, router, bahkan sistem pendingin (HVAC). Banyak dari perangkat ini diinstal dengan konfigurasi "Plug and Play" tanpa mengubah password default atau bahkan tanpa otentikasi sama sekali.</p>
+            <p>Dengan Google Dorking, kita bisa melihat apa yang "didengar dan dilihat" oleh internet.</p>
+
+            <h2>1. Mengapa Perangkat Ini Terindeks?</h2>
+            <p>Perangkat IoT biasanya memiliki antarmuka web (Web Interface) untuk administrasi. Karena terhubung ke IP publik, crawler Google menemukannya. Jika judul halamannya unik (misal: "WebcamXP 5"), Google menyimpannya.</p>
+
+            <h2>2. Dorks untuk IP Camera (CCTV)</h2>
+            <p>Banyak produsen kamera memiliki string URL yang unik.</p>
+
+            <h3>Axis Cameras:</h3>
+            <pre><code>inurl:"view/view.shtml"
+intitle:"Live View / - AXIS"</code></pre>
+            
+            <h3>Panasonic Cameras:</h3>
+            <pre><code>inurl:"ViewerFrame?Mode="</code></pre>
+
+            <h3>WebcamXP (Software CCTV Populer):</h3>
+            <pre><code>intitle:"WebcamXP 5"</code></pre>
+
+            <h3>MJPG Streamer (Proyek Hobbyist/Robotika):</h3>
+            <pre><code>intitle:"MJPG-Streamer" inurl:"/?action=stream"</code></pre>
+
+            <div class="note-box">
+                <strong>Tips:</strong> Banyak hasil pencarian yang mungkin meminta login. Carilah yang judulnya "Live View" atau "Viewer" karena biasanya itu berarti feed videonya langsung tampil tanpa login.
+            </div>
+
+            <h2>3. Printer & Perangkat Lain</h2>
+            <p>Printer modern menyimpan log dokumen apa saja yang diprint (nama file, user, tanggal). Ini info berharga untuk social engineering.</p>
+
+            <h3>HP Printers:</h3>
+            <pre><code>inurl:"hp/device/this.LCDispatcher"</code></pre>
+
+            <h3>Xerox Printers:</h3>
+            <pre><code>intitle:"CentreWare Internet Services"</code></pre>
+
+            <h2>4. VOIP Phones & Routers</h2>
+            <p>Menemukan panel admin router atau telepon VOIP bisa mengungkap log panggilan dan konfigurasi jaringan.</p>
+            <pre><code>intitle:"Linksys" inurl:"Status.htm"
+intitle:"Polycom" inurl:"sip.cfg"</code></pre>
+
+            <h2>5. Etika Melihat vs Mengontrol</h2>
+            <p>Ada garis merah tebal di sini:</p>
+            <ul>
+                <li><strong>Pasif (Legal-ish):</strong> Menemukan halaman login atau halaman yang terbuka secara publik tanpa mem-bypass proteksi apapun.</li>
+                <li><strong>Aktif (Ilegal):</strong> Mencoba login dengan password default (admin/admin), menggerakkan arah kamera (PTZ Control), atau berbicara melalui speaker kamera dua arah.</li>
+            </ul>
+            <p>Selalu asumsikan Anda sedang diawasi saat mengakses perangkat ini. Gunakan pengetahuan ini untuk mengaudit kamera di kantor atau rumah Anda sendiri.</p>
+
+            <div class="cta-box">
+                <h3>🚀 Mulai Recon IoT</h3>
+                <p>Gunakan kategori "OSINT & Recon" di Dork King untuk dork kamera yang lebih variatif.</p>
+                <a href="../index.html" class="cta-btn">Ke Generator Dork King</a>
+            </div>
+
+        </article>
+
+        <footer style="margin-top: 80px; border-top: 1px solid #30363d; padding-top: 40px; text-align: center;">
+            <p style="color: #8b949e; font-size: 0.9rem;">© 2026 Dork King Academy. <em>Watch Your Back.</em></p>
+            <p>
+                <a href="index.html" style="color: #58a6ff; text-decoration: none; margin: 0 10px;">← Kembali ke Kurikulum</a>
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

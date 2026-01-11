@@ -318,19 +318,7 @@ const dorksData = [
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  renderButtons();
-  setupEventListeners();
-  setupAccessibility();
-  
-  // Phase 2 Initialization
-  const target = document.getElementById('target');
-  if(target) {
-      target.addEventListener('input', validateQuery);
-  }
-  document.getElementById('validator-toggle').checked = validatorEnabled;
-  loadSharedQuery();
-});
+// DOMContentLoaded listener moved to bottom of file
 
 
 function renderButtons() {
@@ -477,6 +465,7 @@ function setupEventListeners() {
 // Global state
 let currentMode = 'domain'; // 'domain' or 'free'
 let favoriteDorks = JSON.parse(localStorage.getItem('dorkking_favorites')) || [];
+let validatorEnabled = localStorage.getItem('dorkking_validator') === 'true'; // Moved from line 1158
 
 function setupAccessibility() {
   if (!document.getElementById('aria-live-region')) {
@@ -606,7 +595,7 @@ function addDorkToQuery(dorkQuery) {
     }
   }
   
-  targetInput.focus();
+  // targetInput.focus(); // Removed to prevent scroll jumping
   updateQueryPreview();
   announceToScreenReader('Dork added to query');
 }
@@ -761,6 +750,15 @@ function setupCopyButton(text) {
       showNotification('Failed to copy to clipboard', 'error');
     });
   };
+}
+
+function copyDorkToClipboard(dork) {
+    navigator.clipboard.writeText(dork).then(() => {
+        showNotification('📋 Dork copied!');
+    }).catch(err => {
+        console.error(err);
+        showNotification('Failed to copy', 'error');
+    });
 }
 
 
@@ -1155,7 +1153,7 @@ function exportResult(format) {
 }
 
 // 3. Validator
-let validatorEnabled = localStorage.getItem('dorkking_validator') === 'true';
+// Validator state moved to top
 
 function toggleValidator() {
     validatorEnabled = document.getElementById('validator-toggle').checked;
@@ -1369,4 +1367,332 @@ function filterDorks() {
 // Export Phase 4 Functions
 window.toggleMenu = toggleMenu;
 window.filterDorks = filterDorks;
+
+// Phase 5: Imported Dorks from List (Bonus)
+const importedDorks = {
+  category: "🔥 Imported / Community (Bonus)",
+  items: [
+    { label: "Edu Phone Numbers", dork: 'site:.edu "phone number"' },
+    { label: "Edu Student Login", dork: 'inurl:edu "login"' },
+    { label: "Edu vBulletin Forums", dork: '"powered by vbulletin" site:.edu' },
+    { label: "Gov vBulletin Forums", dork: '"powered by vbulletin" site:.gov' },
+    { label: "Mil vBulletin Forums", dork: '"powered by vbulletin" site:.mil' },
+    { label: "Web Config + FTP", dork: 'filetype:config inurl:web.config inurl:ftp' },
+    { label: "Env.ini Config", dork: 'ext:ini intext:env.ini' },
+    { label: "Microsoft IIS Logs", dork: 'ext:log "Software: Microsoft Internet Information Services"' },
+    { label: "Access DB Dump", dork: 'ext:mdb inurl:*.mdb inurl:fpdb shop.mdb' },
+    { label: "Open Directories (MP3)", dork: 'intitle:"index of" "parent directory" MP3 -html -htm -php' },
+    { label: "Open Directories (Apps)", dork: 'intitle:"index of" "parent directory" /appz/ -html -htm -php' },
+    { label: "Confidential Docs", dork: 'ext:(doc | pdf | xls | txt) (intext:"confidential salary" | intext:"budget approved")' },
+    { label: "Search Index Cache", dork: 'cache:google.com' },
+    { label: "Related Sites", dork: 'related:google.com' }
+  ]
+};
+
+// Add to main data safely
+if (typeof dorksData !== 'undefined') {
+    dorksData.push(importedDorks);
+}
+
+// Phase 5: Keyboard Shortcuts Implementation
+document.addEventListener('keydown', (e) => {
+    // Ctrl+K or Cmd+K to focus search input
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const targetInput = document.getElementById('target');
+        if (targetInput) {
+            targetInput.focus();
+            
+            // Visual feedback
+            targetInput.style.boxShadow = '0 0 0 4px rgba(46, 160, 67, 0.4)';
+            setTimeout(() => {
+                targetInput.style.boxShadow = '';
+            }, 300);
+        }
+    }
+
+    // Esc to blur/unfocus
+    if (e.key === 'Escape') {
+        const targetInput = document.getElementById('target');
+        if (document.activeElement === targetInput) {
+            targetInput.blur();
+        }
+    }
+});
+
+// Initialize App (Moved from top to ensure all vars are defined)
+document.addEventListener('DOMContentLoaded', () => {
+  renderButtons();
+  setupEventListeners();
+  setupAccessibility();
+  
+  // Phase 2 Initialization
+  const target = document.getElementById('target');
+  if(target) {
+      target.addEventListener('input', validateQuery);
+  }
+  
+  const validatorToggle = document.getElementById('validator-toggle');
+  if (validatorToggle) {
+      validatorToggle.checked = validatorEnabled;
+  }
+  
+  loadSharedQuery();
+
+  // Phase 6 Initialization
+  setupPhase6Listeners();
+  loadTargets();
+});
+
+// ==========================================
+// Phase 6: Ultra Features Logic (Target Manager & Builder)
+// ==========================================
+
+// --- Target Manager Logic ---
+let targetList = [];
+let massModeEnabled = false;
+
+function setupPhase6Listeners() {
+    // Target Manager Modal
+    const targetModal = document.getElementById('target-modal');
+    const openTargetBtn = document.getElementById('btn-target-manager');
+    const closeTargetBtn = document.getElementById('close-target-modal');
+    const saveTargetsBtn = document.getElementById('save-targets-btn');
+    const addTargetBtn = document.getElementById('add-target-btn');
+    const clearTargetsBtn = document.getElementById('clear-targets-btn');
+
+    if(openTargetBtn) openTargetBtn.onclick = () => targetModal.classList.add('active');
+    if(closeTargetBtn) closeTargetBtn.onclick = () => targetModal.classList.remove('active');
+    
+    if(addTargetBtn) {
+        addTargetBtn.onclick = addTarget;
+        // Allow Enter key to add target
+        document.getElementById('new-target-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTarget();
+        });
+    }
+
+    if(clearTargetsBtn) clearTargetsBtn.onclick = () => {
+        targetList = [];
+        renderTargets();
+        saveTargets();
+    };
+
+    if(saveTargetsBtn) saveTargetsBtn.onclick = () => {
+        saveTargets();
+        targetModal.classList.remove('active');
+        showToast('Targets saved!', 'success');
+    };
+
+    // Mass Mode Toggle
+    const massToggle = document.getElementById('mass-mode-toggle');
+    if(massToggle) {
+        massToggle.onchange = (e) => {
+            massModeEnabled = e.target.checked;
+            const targetInput = document.getElementById('target');
+            if(massModeEnabled) {
+                targetInput.disabled = true;
+                targetInput.placeholder = `Mass Mode Active (${targetList.length} targets)`;
+                targetInput.value = ''; 
+            } else {
+                targetInput.disabled = false;
+                targetInput.placeholder = "Target domain (e.g., gojek.com)";
+            }
+        };
+    }
+
+    // Builder Modal
+    const builderModal = document.getElementById('builder-modal');
+    const openBuilderBtn = document.getElementById('btn-builder');
+    const closeBuilderBtn = document.getElementById('close-builder-modal');
+    const addRowBtn = document.getElementById('add-row-btn');
+    const applyBuilderBtn = document.getElementById('apply-builder-btn');
+
+    if(openBuilderBtn) openBuilderBtn.onclick = () => {
+        builderModal.classList.add('active');
+        if(builderRows.length === 0) addBuilderRow(); // Add first row by default
+    };
+    if(closeBuilderBtn) closeBuilderBtn.onclick = () => builderModal.classList.remove('active');
+    
+    if(addRowBtn) addRowBtn.onclick = addBuilderRow;
+    if(applyBuilderBtn) applyBuilderBtn.onclick = () => {
+        const query = generateBuilderQuery();
+        const mainInput = document.getElementById('target');
+        // If main input has content, append? No, usually builder replaces or appends to dork.
+        // For Dork King, let's assume this builds the "Dork" part, not the target.
+        // Actually, users might want to build the WHOLE query including site:.
+        // Simplest: Inject into search bar (conceptually, we don't have a main search bar for RAW query, 
+        // we have Target Input + Dork Buttons). 
+        // A better approach for this UI: Inject result into a "Custom Query" handler or just open Google.
+        
+        // Let's open Google directly with the built query + target
+        const fullQuery = constructFinalQuery(query);
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(fullQuery)}`, '_blank');
+        builderModal.classList.remove('active');
+    };
+}
+
+function addTarget() {
+    const input = document.getElementById('new-target-input');
+    const domain = input.value.trim().replace(/^https?:\/\//, '').replace(/\/$/, ''); // Clean URL
+    
+    if (domain && !targetList.includes(domain)) {
+        targetList.push(domain);
+        renderTargets();
+        input.value = '';
+        input.focus();
+    }
+}
+
+function renderTargets() {
+    const container = document.getElementById('target-list-container');
+    container.innerHTML = targetList.map(domain => `
+        <span class="target-tag">
+            ${domain}
+            <button class="remove-target-btn" onclick="removeTarget('${domain}')">×</button>
+        </span>
+    `).join('');
+    
+    // Update Mass Mode placeholder if active
+    if(massModeEnabled) {
+        document.getElementById('target').placeholder = `Mass Mode Active (${targetList.length} targets)`;
+    }
+}
+
+function removeTarget(domain) {
+    targetList = targetList.filter(t => t !== domain);
+    renderTargets();
+}
+
+function saveTargets() {
+    localStorage.setItem('dorkKing_targets', JSON.stringify(targetList));
+}
+
+function loadTargets() {
+    const saved = localStorage.getItem('dorkKing_targets');
+    if (saved) {
+        targetList = JSON.parse(saved);
+        renderTargets();
+    }
+}
+
+// Override logic: generate target string
+// We need to Monkey-Patch or modify `updateLink` logic.
+// Since `updateLink` uses `document.getElementById('target').value`, we need to handle mass mode there.
+// BUT `updateLink` is defined separately. A cleaner way is to make a global function `getCurrentTarget()`
+// and update `updateLink` to use it.
+// OR, we can hijack the generation logic in the `updateLink` function itself if we had access.
+// Since we are appending code, let's overwrite the `updateLink` function if possible, or 
+// use a hook. 
+// CHECK SCRIPT: `updateLink` is defined in global scope?
+// YES. Let's Redefine `updateLink` here to support Mass Mode.
+
+window.updateLink = function(dorkPattern) {
+    let target = '';
+    
+    if (massModeEnabled && targetList.length > 0) {
+        // Mass Mode: (site:a.com OR site:b.com)
+        const sites = targetList.map(t => `site:${t}`).join(' OR ');
+        target = `(${sites})`;
+    } else {
+        // Single Mode
+        const rawTarget = document.getElementById('target').value.trim();
+        if (rawTarget) {
+            target = `site:${rawTarget}`;
+        }
+    }
+    
+    const query = `${target} ${dorkPattern}`.trim();
+    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+};
+
+
+// --- Visual Builder Logic ---
+let builderRows = [];
+
+function addBuilderRow() {
+    const rowId = Date.now();
+    const rowHTML = `
+        <div class="builder-row" id="row-${rowId}">
+            <select class="builder-select op-select" onchange="updateBuilderPreview()">
+                <option value="AND">AND</option>
+                <option value="OR">OR</option>
+            </select>
+            
+            <select class="builder-select type-select" onchange="updateBuilderPreview()">
+                <option value="intext:">Intext (Text)</option>
+                <option value="intitle:">Intitle (Title)</option>
+                <option value="inurl:">Inurl (URL)</option>
+                <option value="filetype:">Filetype</option>
+                <option value="ext:">Ext</option>
+                <option value="site:">Site</option>
+                <option value="cache:">Cache</option>
+                <option value="" selected>Raw Term</option>
+            </select>
+            
+            <input type="text" class="builder-input val-input" placeholder="Value..." oninput="updateBuilderPreview()">
+            
+            <button class="remove-target-btn" onclick="removeBuilderRow(${rowId})">×</button>
+        </div>
+    `;
+    
+    document.getElementById('builder-rows').insertAdjacentHTML('beforeend', rowHTML);
+    // Hide first operator
+    const rows = document.getElementsByClassName('builder-row');
+    if(rows.length > 0) {
+        rows[0].querySelector('.op-select').style.visibility = 'hidden';
+    }
+}
+
+window.removeBuilderRow = function(id) {
+    const row = document.getElementById(`row-${id}`);
+    if(row) row.remove();
+    updateBuilderPreview();
+}
+
+window.updateBuilderPreview = function() {
+    const query = generateBuilderQuery();
+    document.getElementById('builder-preview-code').textContent = query || '...';
+}
+
+function generateBuilderQuery() {
+    const rows = document.querySelectorAll('.builder-row');
+    let query = '';
+    
+    rows.forEach((row, index) => {
+        const op = row.querySelector('.op-select').value;
+        const type = row.querySelector('.type-select').value;
+        const val = row.querySelector('.val-input').value.trim();
+        
+        if(val) {
+            let part = '';
+            // Quote value if it has spaces and isn't a filetype
+            const formattedVal = (val.includes(' ') && !type.includes('filetype') && !type.includes('ext')) ? `"${val}"` : val;
+            
+            part = `${type}${formattedVal}`;
+            
+            if (index === 0) {
+                query += part;
+            } else {
+                query += ` ${op} ${part}`;
+            }
+        }
+    });
+    
+    return query;
+}
+
+function constructFinalQuery(builderQuery) {
+    // Combine Builder Query with Target Logic
+    let target = '';
+    if (massModeEnabled && targetList.length > 0) {
+         const sites = targetList.map(t => `site:${t}`).join(' OR ');
+         target = `(${sites})`;
+    } else {
+        const rawTarget = document.getElementById('target').value.trim();
+        if (rawTarget) target = `site:${rawTarget}`;
+    }
+    
+    return `${target} ${builderQuery}`.trim();
+}
 

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Directory Indexing - Dork King Academy</title>
+    <meta name="description" content="Tutorial lengkap mencari Open Directory dengan Google Dorks. Cara menemukan file musik, ebook, film, dan data sensitif di 'Index of'.">
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Roboto Mono', monospace; line-height: 1.8; }
+        .article-container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        .breadcrumb { margin-bottom: 40px; font-size: 0.95rem; color: #8b949e; }
+        .breadcrumb a { color: #58a6ff; text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: #79c0ff; text-decoration: underline; }
+        
+        h1 { font-size: 2.8rem; color: #fff; margin-bottom: 15px; line-height: 1.1; font-weight: 700; }
+        .meta-info { color: #8b949e; margin-bottom: 50px; border-bottom: 1px solid #30363d; padding-bottom: 30px; font-size: 0.9rem; }
+        
+        h2 { color: #fff; margin-top: 60px; margin-bottom: 25px; border-left: 5px solid #2ea043; padding-left: 20px; font-size: 1.8rem; }
+        h3 { color: #79c0ff; margin-top: 30px; margin-bottom: 10px; font-size: 1.3rem; }
+        
+        p, li { font-size: 1.05rem; }
+        
+        /* Code blocks */
+        pre { background: #161b22; padding: 20px; border-radius: 8px; border: 1px solid #30363d; overflow-x: auto; margin: 25px 0; }
+        code { background: rgba(110, 118, 129, 0.4); padding: 0.2em 0.4em; border-radius: 6px; font-family: 'Courier New', monospace; color: #e2b340; }
+        pre code { background: none; padding: 0; color: #c9d1d9; font-size: 0.95rem; }
+        
+        /* Success/Warning Boxes */
+        .box { padding: 25px; border-radius: 8px; margin: 30px 0; border: 1px solid transparent; }
+        .box-info { background: rgba(56, 139, 253, 0.1); border-color: #58a6ff; }
+        .box-warning { background: rgba(210, 153, 34, 0.1); border-color: #d29922; }
+        
+        .cta-box { background: linear-gradient(145deg, rgba(46, 160, 67, 0.1), rgba(22, 27, 34, 0.5)); border: 1px solid #2ea043; padding: 40px; text-align: center; border-radius: 12px; margin: 60px 0; }
+        .cta-btn { display: inline-block; background: #238636; color: #fff; padding: 15px 35px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 25px; font-size: 1.1rem; transition: all 0.2s; }
+        .cta-btn:hover { background: #2ea043; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+    <div class="article-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> / <a href="index.html">Academy</a> / Directory Indexing
+        </div>
+
+        <article>
+            <h1>Menguasai Directory Indexing ("Index of")</h1>
+            <div class="meta-info">
+                Diupdate: 11 Januari 2026 • Kategori: <strong>Reconnaissance</strong> • Level: <strong>Pemula</strong>
+            </div>
+
+            <p><strong>Directory Listing</strong> (atau Directory Indexing) adalah fitur standar pada server web (Apache, Nginx, IIS) yang menampilkan daftar file di dalam folder jika tidak ada halaman default (seperti <code>index.html</code> atau <code>index.php</code>). Jika fitur ini aktif pada folder yang sensitif, ini adalah bencana keamanan.</p>
+            <p>Bagi pemburu OSINT, ini adalah harta karun.</p>
+
+            <h2>1. Anatomi "Index of"</h2>
+            <p>Ketika directory listing aktif, halaman web biasanya memiliki judul (Title) yang sangat khas, yaitu <code>Index of /namafolder</code>. Google mengindeks judul ini.</p>
+            <p>Query dasar untuk menemukannya:</p>
+            <pre><code>intitle:"index of"</code></pre>
+            
+            <p>Namun, itu terlalu umum. Untuk hasil yang efektif, kita perlu mengombinasikannya dengan:</p>
+            <ul>
+                <li>Keywords spesifik (apa yang kita cari).</li>
+                <li>Format file (ekstensi).</li>
+                <li>Struktur direktori umum (Parent Directory).</li>
+            </ul>
+
+            <h2>2. Teknik Mencari File Media (MP4/MP3/Ebook)</h2>
+            <p>Salah satu penggunaan paling populer dari dork ini adalah untuk mencari film, lagu, atau buku tanpa masuk ke situs streaming yang penuh iklan.</p>
+            
+            <h3>Mencari Film/Video:</h3>
+            <pre><code>intitle:"index of" (mp4|mkv|avi) "Avengers" -html -htm -jsp -php</code></pre>
+            <div class="box box-info">
+                <strong>Penjelasan:</strong>
+                <ul>
+                    <li><code>(mp4|mkv|avi)</code>: Mencari salah satu ekstensi video ini.</li>
+                    <li><code>-html -htm</code>: Menghilangkan hasil halaman web biasa, fokus pada direktori server.</li>
+                    <li><code>"Avengers"</code>: Kata kunci film.</li>
+                </ul>
+            </div>
+
+            <h3>Mencari Ebook (PDF/EPUB):</h3>
+            <pre><code>intitle:"index of" (pdf|epub|mobi) "Hacking" "Tutorial"</code></pre>
+
+            <h2>3. Teknik Mencari Data Sensitif</h2>
+            <p>Di dunia keamanan siber, kita menggunakan teknik yang sama untuk menemukan data kebocoran (Data Leaks).</p>
+
+            <h3>Mencari File Backup Admin:</h3>
+            <pre><code>intitle:"index of" "backup" OR "bak" OR "old" site:go.id</code></pre>
+            <p>Query ini akan mencari folder bernama backup di domain pemerintah Indonesia.</p>
+
+            <h3>Mencari Database (DCIM/Camera Uploads):</h3>
+            <p>Seringkali orang melakukan backup foto HP ke server web tanpa proteksi.</p>
+            <pre><code>intitle:"index of" "DCIM" OR "Camera"</code></pre>
+
+            <h3>Mencari Log Chat WhatsApp:</h3>
+            <pre><code>intitle:"index of" "WhatsApp Images" OR "WhatsApp Databases"</code></pre>
+
+            <h2>4. Server Spesifik (Apache / Nginx / IIS)</h2>
+            <p>Setiap server memiliki "signature" teks yang berbeda di halaman index-nya.</p>
+            
+            <ul>
+                <li><strong>Apache:</strong> <code>intitle:"Index of" "Apache Server at"</code></li>
+                <li><strong>Nginx:</strong> <code>intitle:"Index of" "Welcome to nginx"</code> (jarang, karena nginx defaultnya mematikan autoindex)</li>
+            </ul>
+
+            <div class="box box-warning">
+                <strong>⚠️ Peringatan Etis:</strong>
+                Menemukan direktori terbuka itu legal. <strong>MENGUNDUH</strong> data pribadi orang lain (seperti foto pribadi di folder DCIM) atau data perusahaan dan menyebarkannya adalah **ILEGAL**. Gunakan kemampuan ini hanya untuk audit atau mencari file publik.
+            </div>
+
+            <h2>5. Cara Mencegah (Untuk Admin)</h2>
+            <p>Jika Anda adalah admin server, matikan fitur ini segera.</p>
+            <ul>
+                <li><strong>Apache (.htaccess):</strong> Tambahkan baris <code>Options -Indexes</code></li>
+                <li><strong>Nginx (nginx.conf):</strong> Pastikan <code>autoindex off;</code> (ini default, tapi periksa lagi).</li>
+            </ul>
+
+            <div class="cta-box">
+                <h3>🚀 Coba Dork "Index of" Sekarang</h3>
+                <p>Generator kami memiliki preset khusus untuk pencarian Index Of (Video, Buku, Software).</p>
+                <a href="../index.html" class="cta-btn">Buka Dork King Generator</a>
+            </div>
+
+        </article>
+
+        <footer style="margin-top: 80px; border-top: 1px solid #30363d; padding-top: 40px; text-align: center;">
+            <p style="color: #8b949e; font-size: 0.9rem;">© 2026 Dork King Academy. <em>Explore the Unseen.</em></p>
+            <p>
+                <a href="index.html" style="color: #58a6ff; text-decoration: none; margin: 0 10px;">← Kembali ke Kurikulum</a>
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

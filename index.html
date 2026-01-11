@@ -200,13 +200,33 @@
                 <label for="target" id="input-label">Target Domain or Website:</label>
                 
                 <!-- Input Field with dynamic prefix -->
-                <div class="input-wrapper" id="input-wrapper">
+                <div class="input-wrapper" id="input-wrapper" style="position: relative;">
                     <span class="prefix" id="input-prefix">site:</span>
                     <input type="text" 
                            id="target" 
                            placeholder="example.com" 
                            autocomplete="off"
                            aria-label="Enter target domain">
+                    
+                    <div style="display: flex; align-items: center; gap: 10px; padding-left: 10px; border-left: 1px solid var(--border-color);">
+                         <button id="btn-target-manager" class="icon-btn tooltip" aria-label="Target Manager" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;">
+                            <i class="fas fa-layer-group"></i>
+                        </button>
+                        
+                        <!-- Toggle for Mass Mode -->
+                        <div class="mass-mode-toggle" style="margin: 0;">
+                            <label class="switch" style="transform: scale(0.8);">
+                                <input type="checkbox" id="mass-mode-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                     <button id="btn-builder" class="action-btn secondary-btn" style="width: auto; padding: 5px 15px; font-size: 0.9rem;">
+                        <i class="fas fa-tools" style="margin-right: 5px;"></i> Dork Builder
+                    </button>
                 </div>
 
                 <!-- Operator Helper Buttons (visible in Free Input mode) -->
@@ -409,9 +429,7 @@
                 <h3>Manage Presets</h3>
                 <button class="close-modal" onclick="closeModal('preset-manager-modal')">×</button>
             </div>
-            <div class="modal-body">
-                <div class="action-row" style="margin-bottom: 20px;">
-                    <button class="mode-btn" onclick="document.getElementById('import-file').click()">⬇️ Import</button>
+                        <button class="mode-btn" onclick="document.getElementById('import-file').click()">⬇️ Import</button>
                     <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importPresets(this)">
                     <button class="mode-btn" onclick="exportPresets()">⬆️ Export All</button>
                 </div>
@@ -420,8 +438,59 @@
                     <div class="empty-state">No saved presets yet.</div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="mode-btn" onclick="closeModal('preset-manager-modal')">Close</button>
+        </div>
+    </div>
+
+
+
+    <!-- Target Manager Modal -->
+    <div id="target-modal" class="modal-overlay">
+        <div class="modal large-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-layer-group"></i> Multiple Target Manager</h3>
+                <button class="close-modal" id="close-target-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Add multiple domains to scan them simultaneously (Mass Recon).</p>
+                <div class="target-input-area">
+                    <input type="text" id="new-target-input" placeholder="Add domain (e.g. tesla.com)">
+                    <button id="add-target-btn" class="primary-btn">Add</button>
+                </div>
+                <div id="target-list-container" class="target-list">
+                    <!-- Targets will be rendered here -->
+                </div>
+                <div class="modal-actions" style="margin-top: 20px; text-align: right;">
+                    <button id="clear-targets-btn" class="danger-btn">Clear All</button>
+                    <button id="save-targets-btn" class="primary-btn">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dork Builder Modal -->
+    <div id="builder-modal" class="modal-overlay">
+        <div class="modal large-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-tools"></i> Visual Dork Builder</h3>
+                <button class="close-modal" id="close-builder-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="builder-rows">
+                    <!-- Builder rows will be added here -->
+                </div>
+                
+                <div style="margin-top: 15px;">
+                     <button id="add-row-btn" class="secondary-btn" style="width: auto;"><i class="fas fa-plus"></i> Add Condition</button>
+                </div>
+                
+                <div class="builder-preview">
+                    <label>Live Preview:</label>
+                    <code id="builder-preview-code">...</code>
+                </div>
+                
+                <div class="modal-actions" style="text-align: right;">
+                    <button id="apply-builder-btn" class="primary-btn">Inject to Search</button>
+                </div>
             </div>
         </div>
     </div>

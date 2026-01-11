@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunting AWS S3 & Cloud Buckets - Dork King Academy</title>
+    <meta name="description" content="Cara menemukan Amazon S3 Buckets, Azure Blobs, dan Google Cloud Storage yang terbuka. Teknik dorking untuk cloud security.">
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Roboto Mono', monospace; line-height: 1.8; }
+        .article-container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        .breadcrumb { margin-bottom: 40px; font-size: 0.95rem; color: #8b949e; }
+        .breadcrumb a { color: #58a6ff; text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: #79c0ff; text-decoration: underline; }
+        
+        h1 { font-size: 2.8rem; color: #fff; margin-bottom: 15px; line-height: 1.1; font-weight: 700; }
+        .meta-info { color: #8b949e; margin-bottom: 50px; border-bottom: 1px solid #30363d; padding-bottom: 30px; font-size: 0.9rem; }
+        
+        h2 { color: #fff; margin-top: 60px; margin-bottom: 25px; border-left: 5px solid #d29922; padding-left: 20px; font-size: 1.8rem; }
+        h3 { color: #79c0ff; margin-top: 30px; margin-bottom: 10px; font-size: 1.3rem; }
+        
+        p, li { font-size: 1.05rem; }
+        
+        pre { background: #161b22; padding: 20px; border-radius: 8px; border: 1px solid #30363d; overflow-x: auto; margin: 25px 0; }
+        code { background: rgba(110, 118, 129, 0.4); padding: 0.2em 0.4em; border-radius: 6px; font-family: 'Courier New', monospace; color: #d2a8ff; }
+        pre code { background: none; padding: 0; color: #c9d1d9; font-size: 0.95rem; }
+        
+        .mitation-box { background: rgba(46, 160, 67, 0.1); border-left: 4px solid #2ea043; padding: 20px; margin: 30px 0; }
+
+        .cta-box { background: linear-gradient(145deg, rgba(210, 153, 34, 0.1), rgba(22, 27, 34, 0.5)); border: 1px solid #d29922; padding: 40px; text-align: center; border-radius: 12px; margin: 60px 0; }
+        .cta-btn { display: inline-block; background: #9e6a03; color: #fff; padding: 15px 35px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 25px; font-size: 1.1rem; transition: all 0.2s; }
+        .cta-btn:hover { background: #b07b06; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+    <div class="article-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> / <a href="index.html">Academy</a> / AWS S3 Leaks
+        </div>
+
+        <article>
+            <h1>Berburu AWS S3 Buckets & Cloud Leaks</h1>
+            <div class="meta-info">
+                Diupdate: 11 Januari 2026 • Kategori: <strong>Cloud Security</strong> • Level: <strong>Expert</strong>
+            </div>
+
+            <p>Cloud Storage (penyimpanan awan) seperti Amazon S3 adalah tempat tulang punggung aplikasi modern menyimpan file statis. Dari gambar profil pengguna hingga laporan PDF tagihan.</p>
+            <p>Masalahnya: Secara default, bucket S3 memang privat. Namun, satu kesalahan konfigurasi "Make Public" dapat membuat jutaan file terindeks oleh Google.</p>
+
+            <h2>1. Memahami Struktur URL S3</h2>
+            <p>Amazon S3 memiliki format URL yang dapat diprediksi:</p>
+            <ul>
+                <li><code>http://[nama-bucket].s3.amazonaws.com</code></li>
+                <li><code>http://s3.amazonaws.com/[nama-bucket]</code></li>
+            </ul>
+            <p>Jika kita menggunakan operator <code>site:</code> pada domain root S3, kita bisa mencari miliaran file yang di-hosting di sana.</p>
+
+            <h2>2. Google Dorks untuk AWS S3</h2>
+            
+            <h3>Mencari Bucket Target Tertentu:</h3>
+            <pre><code>site:s3.amazonaws.com "tesla"</code></pre>
+            <p>Dork ini akan menampilkan semua file publik yang di-hosting di S3 yang mengandung kata "tesla" dalam URL atau kontennya.</p>
+
+            <h3>Mencari File Sensitif di S3:</h3>
+            <pre><code>site:s3.amazonaws.com intext:"password" filetype:xlsx
+site:s3.amazonaws.com "confidential" filetype:pdf
+site:s3.amazonaws.com "backup" filetype:zip</code></pre>
+
+            <h2>3. Cloud Provider Lain (Azure & Google Cloud)</h2>
+            <p>Jangan hanya fokus pada AWS. Azure dan GCP juga memiliki masalah yang sama.</p>
+
+            <h3>Azure Blob Storage:</h3>
+            <pre><code>site:blob.core.windows.net "perusahaan"</code></pre>
+
+            <h3>Google Cloud Storage:</h3>
+            <pre><code>site:googleapis.com inurl:"storage" "perusahaan"</code></pre>
+
+            <h3>DigitalOcean Spaces:</h3>
+            <pre><code>site:digitaloceanspaces.com "backup"</code></pre>
+
+            <h2>4. Alat Bantu: GrayhatWarfare</h2>
+            <p>Meskipun Google Dorks ampuh, kadang Google tidak mengindeks file biner. Situs seperti <em>GrayhatWarfare</em> adalah mesin pencari khusus untuk public buckets. Namun, untuk tahap awal, dorking lebih dari cukup untuk menemukan kebocoran tekstual.</p>
+
+            <h2>5. Memverifikasi Temuan (XML Listing)</h2>
+            <p>Jika Anda membuka URL root bucket (misal: <code>http://bucket-rahasia.s3.amazonaws.com</code>) dan melihat XML seperti ini:</p>
+            <pre><code>&lt;ListBucketResult&gt;
+    &lt;Contents&gt;
+        &lt;Key&gt;database_backup.sql&lt;/Key&gt;
+    &lt;/Contents&gt;
+&lt;/ListBucketResult&gt;</code></pre>
+            <p>Selamat, Anda menemukan bucket dengan "ListObjects" permission yang aktif. Anda bisa melihat semua file di sana.</p>
+
+            <div class="mitation-box">
+                <strong>🛡️ Cara Mengamankan S3:</strong>
+                <ol>
+                    <li>Matikan "Block Public Access" pada level akun AWS.</li>
+                    <li>Gunakan Bucket Policy yang ketat (hanya izinkan IP kantor atau CloudFront OAI).</li>
+                    <li>Jangan pernah menyimpan kredensial (access keys) di dalam bucket.</li>
+                </ol>
+            </div>
+
+            <div class="cta-box">
+                <h3>🚀 Scan Cloud Aset Anda</h3>
+                <p>Gunakan Dork King untuk memantau apakah vendor cloud Anda mengekspos data Anda.</p>
+                <a href="../index.html" class="cta-btn">Ke Generator Dork King</a>
+            </div>
+
+        </article>
+
+        <footer style="margin-top: 80px; border-top: 1px solid #30363d; padding-top: 40px; text-align: center;">
+            <p style="color: #8b949e; font-size: 0.9rem;">© 2026 Dork King Academy. <em>Cloud Security Matters.</em></p>
+            <p>
+                <a href="index.html" style="color: #58a6ff; text-decoration: none; margin: 0 10px;">← Kembali ke Kurikulum</a>
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

@@ -1,111 +1,178 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top 10 Google Dorks for Bug Bounty Hunting (2026) | DorkSearch PRO</title>
-    <meta name="description" content="A curated list of the most effective Google Dorks for finding vulnerabilities, exposed databases, and configuration files during bug bounty engagements.">
+    <title>Top 10 Google Dorks 2026: The Bug Hunter's List - Dork King Academy</title>
+    <meta name="description" content="Analisis teknis mendalam tentang 10 Google Dork paling kritis untuk Bug Bounty. Termasuk case study, mitigasi, dan variasi query tingkat lanjut.">
     <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Reutilizamos estilos del artículo anterior */
         body { background-color: #0d1117; color: #c9d1d9; font-family: 'Roboto Mono', monospace; line-height: 1.8; }
-        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-        .breadcrumb { margin-bottom: 30px; font-size: 0.9rem; color: #8b949e; }
-        .breadcrumb a { color: #58a6ff; text-decoration: none; }
-        h1 { font-size: 2.2rem; color: #fff; margin-bottom: 10px; }
-        h2 { color: #fff; margin-top: 40px; border-left: 4px solid #2ea043; padding-left: 15px; }
-        code { background: rgba(110, 118, 129, 0.4); padding: 0.2em 0.4em; border-radius: 6px; font-family: 'Courier New', monospace; color: #ff7b72; }
-        .dork-card { background: #161b22; border: 1px solid #30363d; padding: 20px; margin: 20px 0; border-radius: 8px; }
-        .copy-btn { float: right; cursor: pointer; color: #2ea043; font-size: 0.8rem; }
+        .article-container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        .breadcrumb { margin-bottom: 40px; font-size: 0.95rem; color: #8b949e; }
+        .breadcrumb a { color: #58a6ff; text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: #79c0ff; text-decoration: underline; }
+        
+        h1 { font-size: 2.8rem; color: #fff; margin-bottom: 15px; line-height: 1.1; font-weight: 700; }
+        .meta-info { color: #8b949e; margin-bottom: 50px; border-bottom: 1px solid #30363d; padding-bottom: 30px; font-size: 0.9rem; }
+        
+        h2 { color: #fff; margin-top: 60px; margin-bottom: 25px; border-left: 5px solid #d2a8ff; padding-left: 20px; font-size: 1.8rem; }
+        /* Warna border beda dikit biar variatif */
+        h2:nth-of-type(odd) { border-left-color: #2ea043; } 
+        
+        h3 { color: #79c0ff; margin-top: 30px; margin-bottom: 10px; font-size: 1.3rem; }
+        
+        .dork-card { background: #161b22; border: 1px solid #30363d; padding: 25px; margin: 25px 0; border-radius: 8px; position: relative; transition: border-color 0.2s; }
+        .dork-card:hover { border-color: #58a6ff; }
+        .dork-label { position: absolute; top: -12px; right: 20px; background: #238636; color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .dork-label.high { background: #da3633; } /* Merah untuk High Impact */
+        .dork-label.medium { background: #d29922; } /* Kuning untuk Medium */
+        
+        code.query { display: block; font-size: 1.1rem; color: #ff7b72; word-break: break-all; font-weight: bold; margin-bottom: 10px; }
+        
+        .explanation { font-size: 0.95rem; color: #8b949e; border-top: 1px dashed #30363d; padding-top: 15px; margin-top: 15px; }
+        
+        .mitigation-box { background: rgba(56, 139, 253, 0.1); border-left: 4px solid #58a6ff; padding: 20px; margin: 20px 0; font-size: 0.95rem; }
+        .mitigation-title { color: #58a6ff; font-weight: bold; display: block; margin-bottom: 5px; }
+
+        .cta-box { background: linear-gradient(145deg, rgba(46, 160, 67, 0.1), rgba(22, 27, 34, 0.5)); border: 1px solid #2ea043; padding: 40px; text-align: center; border-radius: 12px; margin: 60px 0; }
+        .cta-btn { display: inline-block; background: #238636; color: #fff; padding: 15px 35px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 25px; font-size: 1.1rem; transition: all 0.2s; }
+        .cta-btn:hover { background: #2ea043; transform: scale(1.02); }
     </style>
 </head>
 <body>
 
     <div class="article-container">
         <div class="breadcrumb">
-            <a href="../index.html">Home</a> / <a href="index.html">Academy</a> / Top 10 Dorks
+            <a href="../index.html">Home</a> / <a href="index.html">Academy</a> / Top 10 Dorks 2026
         </div>
 
         <article>
-            <h1>Top 10 Google Dorks for Bug Bounty Hunters</h1>
-            <div style="color: #8b949e; margin-bottom: 30px; border-bottom: 1px solid #30363d; padding-bottom: 20px;">
-                Updated: January 5, 2026 • <strong>Technical Guide</strong>
+            <h1>Top 10 Google Dorks 2026: Daftar Wajib Bug Hunter</h1>
+            <div class="meta-info">
+                Official Technical Guide • Diupdate: 11 Januari 2026 • Kategori: <strong>Reconnaissance</strong>
             </div>
 
-            <p>Google Dorking is a staple in the reconnaissance phase of any Bug Bounty program. Before you launch Burp Suite or Nmap, you should always check what the target has already leaked to the public index.</p>
-            <p>Here are the top 10 most effective dorks for identifying low-hanging fruit vulnerabilities.</p>
+            <p>Dalam Bug Bounty, fase pengumpulan informasi (Information Gathering) adalah 80% dari kemenangan. Sebelum Anda menyentuh scanner otomatis, Google Dorks memungkinkan Anda melihat "low-hanging fruits" atau kerentanan yang sangat jelas terlihat namun terlewatkan.</p>
+            <p>Berikut adalah 10 dork paling kritis di tahun 2026, diurutkan berdasarkan potensi dampak (Impact) dan frekuensi temuan.</p>
 
-            <h2>1. Finding Exposed Environment Files</h2>
-            <p>The <code>.env</code> file is the holy grail for hackers. It often contains API keys, database credentials, and debug settings.</p>
+            <h2>1. Exposed Environment Files (.env)</h2>
+            <p>Ini adalah "Cawan Suci" (Holy Grail) dari web hacking modern. Framework seperti Laravel, Node.js, dan Django menggunakan file ini untuk menyimpan rahasia.</p>
+            
             <div class="dork-card">
-                <code>filetype:env "DB_PASSWORD" site:example.com</code>
+                <span class="dork-label high">Critical Impact</span>
+                <code class="query">filetype:env "DB_PASSWORD" site:example.com</code>
+                <div class="explanation">
+                    <strong>Analisis:</strong> Mencari file berekstensi <code>.env</code> yang didalamnya terdapat string "DB_PASSWORD".
+                    <br><strong>Variasi:</strong> <code>filename:.env</code>, <code>intext:"APP_KEY="</code>
+                </div>
+            </div>
+            
+            <div class="mitigation-box">
+                <span class="mitigation-title">🛡️ Mitigasi:</span>
+                Konfigurasikan server web (Nginx/Apache) untuk menolak akses ke semua file yang diawali dengan titik (<code>.*</code>). Pastikan <code>.env</code> masuk dalam <code>.gitignore</code>.
             </div>
 
-            <h2>2. Publicly Accessible Log Files</h2>
-            <p>Log files can leak user data, internal IP addresses, and system pathways.</p>
+            <h2>2. Public Git Repositories</h2>
+            <p>Folder <code>.git</code> berisi seluruh sejarah kode sumber Anda. Jika terekspos, penyerang dapat merekonstruksi source code backend Anda lengkap dengan hardcoded credentials lama.</p>
+
             <div class="dork-card">
-                <code>filetype:log OR filetype:txt intext:"password" site:example.com</code>
+                <span class="dork-label high">High Impact</span>
+                <code class="query">inurl:"/.git" intitle:"Index of" site:example.com</code>
+                <div class="explanation">
+                    <strong>Analisis:</strong> Mencari direktori <code>.git</code> yang index-nya terbuka.
+                    <br><strong>Bahaya:</strong> Alat seperti <code>git-dumper</code> dapat mengunduh seluruh situs.
+                </div>
             </div>
 
-            <h2>3. Exposed SQL Database Dumps</h2>
-            <p>Developers sometimes leave database backups in public directories. These files usually contain the entire database schema and data.</p>
+            <h2>3. Log Files dengan Kredensial</h2>
+            <p>File log seringkali mencatat data sensitif secara tidak sengaja, seperti password dalam parameter URL (GET request) atau pesan error database.</p>
+
             <div class="dork-card">
-                <code>filetype:sql intext:"INSERT INTO" site:example.com</code>
+                <span class="dork-label medium">Medium-High Impact</span>
+                <code class="query">filetype:log OR filetype:txt intext:"password" site:example.com</code>
+                <div class="explanation">
+                    <strong>Analisis:</strong> Log aplikasi, log akses server, atau dump debug yang tekstual.
+                </div>
             </div>
 
-            <h2>4. Directory Listing Enabled</h2>
-            <p>When a server is misconfigured, it lists all files in a directory. This allows you to browse the file system like a local folder.</p>
+            <h2>4. SQL Database Dumps</h2>
+            <p>Backup database adalah target emas. Seringkali admin melakukan backup cepat (<code>mysqldump</code>) dan menyimpannya di root folder publik dengan nama yang mudah ditebak.</p>
+
             <div class="dork-card">
-                <code>intitle:"index of /" "parent directory" site:example.com</code>
+                <span class="dork-label high">Critical Impact</span>
+                <code class="query">filetype:sql intext:"INSERT INTO" "users" site:example.com</code>
+                <div class="explanation">
+                    <strong>Analisis:</strong> File SQL murni yang berisi perintah insert data ke tabel pengguna.
+                </div>
             </div>
 
-            <h2>5. Configuration Files (XML/CONF)</h2>
-            <p>These files often reveal server versions and internal network architecture.</p>
+            <h2>5. Configuration Files (XML/YAML/CONF)</h2>
+            <p>File ini memetakan infrastruktur internal. Mengetahui versi server, IP internal, dan path direktori memudahkan serangan lebih lanjut.</p>
+
             <div class="dork-card">
-                <code>filetype:xml OR filetype:conf intext:password site:example.com</code>
+                <span class="dork-label medium">Info Disclosure</span>
+                <code class="query">filetype:xml OR filetype:conf OR filetype:yml intext:"password" site:example.com</code>
             </div>
 
-            <h2>6. Exposed Git Repositories</h2>
-            <p>Finding a <code>.git</code> folder exposes the entire version history of the project.</p>
+            <h2>6. Open Redirects & URL Parameters</h2>
+            <p>Mencari parameter yang mengambil input URL lain. Ini berguna untuk menemukan kerentanan Open Redirect atau SSRF (Server-Side Request Forgery).</p>
+
             <div class="dork-card">
-                <code>inurl:/.git site:example.com</code>
+                <span class="dork-label medium">Web Vuln</span>
+                <code class="query">inurl:redir OR inurl:url OR inurl:redirect OR inurl:return OR inurl:src=http site:example.com</code>
             </div>
 
-            <h2>7. WordPress User Enumeration</h2>
-            <p>Find hidden WordPress login pages or author archives.</p>
+            <h2>7. Dashboard & Admin Panels</h2>
+            <p>Pintu masuk utama. Seringkali ditempatkan di subdomain atau path yang tidak standar untuk "keamanan melalui kegelapan".</p>
+
             <div class="dork-card">
-                <code>inurl:wp-content OR inurl:wp-includes site:example.com</code>
+                <span class="dork-label high">High Impact</span>
+                <code class="query">intitle:"Dashboard" OR intitle:"Admin" OR inurl:login OR inurl:admin site:example.com</code>
             </div>
 
-            <h2>8. PHP Errors and Warnings</h2>
-            <p>Forcing Google to find pages that are crashing can reveal the absolute path of the script.</p>
+            <h2>8. S3 Buckets Terbuka</h2>
+            <p>Penyimpanan cloud yang salah konfigurasi. Google mengindeks bucket S3, Azure Blob, dan Google Cloud Storage yang "public read".</p>
+
             <div class="dork-card">
-                <code>filetype:php intext:"fatal error" site:example.com</code>
+                <span class="dork-label high">Data Leak</span>
+                <code class="query">site:s3.amazonaws.com "example" OR site:blob.core.windows.net "example"</code>
             </div>
 
-            <h2>9. Public S3 Buckets</h2>
-            <p>While not strictly a "dork", Google indexes open Amazon S3 buckets.</p>
+            <h2>9. WordPress Specific (User Enum)</h2>
+            <p>WordPress memiliki struktur URL standar. Kita bisa mengecek direktori upload (biasanya ada shell yang diupload hacker lain) atau plugin rentan.</p>
+
             <div class="dork-card">
-                <code>site:s3.amazonaws.com "company-name"</code>
+                <span class="dork-label medium">Web Vuln</span>
+                <code class="query">inurl:wp-content/uploads/ "backup" site:example.com</code>
             </div>
 
-            <h2>10. Login Portals</h2>
-            <p>Finding the admin panel is step one to testing authentication.</p>
+            <h2>10. PHP Errors (Full Path Disclosure)</h2>
+            <p>Memaksa aplikasi error agar memuntahkan "Stack Trace". Ini mengungkapkan path instalasi absolut (misal: <code>/var/www/html/prod/...</code>) yang berguna untuk serangan LFI (Local File Inclusion).</p>
+
             <div class="dork-card">
-                <code>inurl:login OR inurl:admin OR intitle:"login" site:example.com</code>
+                <span class="dork-label medium">Intel</span>
+                <code class="query">filetype:php intext:"fatal error" OR intext:"syntax error" site:example.com</code>
             </div>
 
-            <div style="background: rgba(46, 160, 67, 0.1); border: 1px solid #2ea043; padding: 25px; margin-top: 40px; border-radius: 8px; text-align: center;">
-                <h3>⚡ Don't type these manually!</h3>
-                <p>Our tool automates all these queries with one click.</p>
-                <a href="../index.html" style="display: inline-block; background: #2ea043; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">Go to Generator</a>
+            <div class="cta-box">
+                <h3>⚡ Jangan Mengetik Manual! Riskan Typo.</h3>
+                <p>Gunakan generator kami untuk membangun query kompleks ini dengan dropdown menu yang presisi. Hemat waktu, temukan lebih banyak.</p>
+                <a href="../index.html" class="cta-btn">Ke Generator Dork King</a>
             </div>
 
         </article>
-        
-        <footer style="margin-top: 50px; text-align: center; font-size: 0.9rem; color: #8b949e;">
-            <p><a href="index.html">Back to Academy</a></p>
+
+        <footer style="margin-top: 80px; border-top: 1px solid #30363d; padding-top: 40px; text-align: center;">
+            <p style="color: #8b949e; font-size: 0.9rem;">© 2026 Dork King Academy. <em>Hunt Wisely, Report Responsibly.</em></p>
+            <p>
+                <a href="index.html" style="color: #58a6ff; text-decoration: none; margin: 0 10px;">← Kembali ke Kurikulum</a>
+            </p>
         </footer>
+
     </div>
+
 </body>
 </html>

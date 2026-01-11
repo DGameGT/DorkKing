@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunting Exposed Config & .env Files - Dork King Academy</title>
+    <meta name="description" content="Tutorial mendalam cara menemukan file konfigurasi sensitif (.env, web.config, wp-config.php) yang membuka akses ke seluruh infrastruktur.">
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Roboto Mono', monospace; line-height: 1.8; }
+        .article-container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        .breadcrumb { margin-bottom: 40px; font-size: 0.95rem; color: #8b949e; }
+        .breadcrumb a { color: #58a6ff; text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: #79c0ff; text-decoration: underline; }
+        
+        h1 { font-size: 2.8rem; color: #fff; margin-bottom: 15px; line-height: 1.1; font-weight: 700; }
+        .meta-info { color: #8b949e; margin-bottom: 50px; border-bottom: 1px solid #30363d; padding-bottom: 30px; font-size: 0.9rem; }
+        
+        h2 { color: #fff; margin-top: 60px; margin-bottom: 25px; border-left: 5px solid #f85149; padding-left: 20px; font-size: 1.8rem; }
+        h3 { color: #79c0ff; margin-top: 30px; margin-bottom: 10px; font-size: 1.3rem; }
+        
+        p, li { font-size: 1.05rem; }
+        
+        pre { background: #161b22; padding: 20px; border-radius: 8px; border: 1px solid #30363d; overflow-x: auto; margin: 25px 0; }
+        code { background: rgba(110, 118, 129, 0.4); padding: 0.2em 0.4em; border-radius: 6px; font-family: 'Courier New', monospace; color: #ff7b72; }
+        pre code { background: none; padding: 0; color: #c9d1d9; font-size: 0.95rem; }
+        
+        .alert-box { background: rgba(218, 54, 51, 0.1); border-left: 4px solid #da3633; padding: 20px; margin: 30px 0; }
+        .alert-title { color: #da3633; font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; }
+
+        .cta-box { background: linear-gradient(145deg, rgba(218, 54, 51, 0.1), rgba(22, 27, 34, 0.5)); border: 1px solid #da3633; padding: 40px; text-align: center; border-radius: 12px; margin: 60px 0; }
+        .cta-btn { display: inline-block; background: #da3633; color: #fff; padding: 15px 35px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 25px; font-size: 1.1rem; transition: all 0.2s; }
+        .cta-btn:hover { background: #f85149; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+    <div class="article-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> / <a href="index.html">Academy</a> / Config Files
+        </div>
+
+        <article>
+            <h1>File .env & Config yang Terekspos: The Keys to the Kingdom</h1>
+            <div class="meta-info">
+                Diupdate: 11 Januari 2026 • Kategori: <strong>Web Security</strong> • Level: <strong>Critical</strong>
+            </div>
+
+            <p>Dalam pengembangan web modern (terutama framework MVC seperti Laravel, Symfony, Django, Rails), file konfigurasi adalah jantung aplikasi. File ini menyimpan variabel lingkungan (Environment Variables) yang menghubungkan aplikasi dengan database, layanan email, dan gateway pembayaran.</p>
+            <p>Jika file ini bisa dibaca publik, penyerang memiliki kendali penuh atas infrastruktur Anda.</p>
+
+            <h2>1. Target Utama: File .env</h2>
+            <p>File <code>.env</code> biasanya berada di root direktori proyek. Formatnya sederhana <code>KEY=VALUE</code>.</p>
+            
+            <p><strong>Isi File .env yang Umum:</strong></p>
+            <ul>
+                <li><code>APP_KEY</code> (Digunakan untuk enkripsi sesi/cookies).</li>
+                <li><code>DB_HOST</code>, <code>DB_USERNAME</code>, <code>DB_PASSWORD</code> (Akses database langsung).</li>
+                <li><code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> (Akses cloud penuh).</li>
+                <li><code>STRIPE_SECRET</code> (Akses rekening pembayaran).</li>
+            </ul>
+
+            <pre><code>filetype:env intext:"DB_PASSWORD"
+filetype:env intext:"APP_DEBUG=true"</code></pre>
+
+            <p><strong>Mengapa ini terjadi?</strong> Developer sering lupa memasukkan <code>.env</code> ke dalam file <code>.gitignore</code>, atau salah mengonfigurasi web server sehingga melayani file dot (`.`) sebagai file statis.</p>
+
+            <h2>2. Web Server Configs (web.config & sftp-config)</h2>
+            <p>Selain aplikasi, server web sendiri punya file config.</p>
+            
+            <h3>IIS Web.Config</h3>
+            <p>Server Windows (IIS) menggunakan XML.</p>
+            <pre><code>filetype:xml inurl:"web.config" intext:"password"</code></pre>
+
+            <h3>Sublime Text SFTP Config</h3>
+            <p>Developer yang menggunakan Sublime Text dengan plugin SFTP sering meninggalkan file <code>sftp-config.json</code> yang berisi password FTP/SSH server!</p>
+            <pre><code>filetype:json inurl:"sftp-config.json" intext:"password"</code></pre>
+
+            <h2>3. Wordpress wp-config.php</h2>
+            <p>File PHP umumnya dieksekusi di server, jadi kita tidak bisa melihat isinya di browser. TAPI, jika admin melakukan backup dengan mengganti nama file menjadi:</p>
+            <ul>
+                <li><code>wp-config.php.bak</code></li>
+                <li><code>wp-config.php.txt</code></li>
+                <li><code>wp-config.php.save</code></li>
+            </ul>
+            <p>Maka server akan menganggapnya sebagai file teks biasa dan menampilkannya ke browser.</p>
+
+            <pre><code>inurl:"wp-config.php.bak" OR inurl:"wp-config.php.txt"</code></pre>
+
+            <h2>4. Docker & Kubernetes Config</h2>
+            <p>Di era container, file konfigurasi orkestrasi juga menjadi target.</p>
+            <pre><code>filetype:yml inurl:"docker-compose.yml" intext:"password"
+filetype:yml inurl:"kube/config"</code></pre>
+
+            <div class="alert-box">
+                <span class="alert-title">Dampak Kebocoran Ini</span>
+                <p>Jika attacker mendapatkan <code>AWS_SECRET_ACCESS_KEY</code> dari file .env Anda:</p>
+                <ol>
+                    <li>Mereka bisa memutar ribuan server EC2 untuk menambang crypto (Cryptojacking).</li>
+                    <li>Tagihan cloud Anda bisa melonjak menjadi $50,000 dalam semalam.</li>
+                    <li>Mereka bisa menghapus semua backup S3 Anda (Ransomware).</li>
+                </ol>
+            </div>
+
+            <h2>5. Pencegahan (Mitigasi)</h2>
+            <p>1. <strong>Block Dotfiles:</strong> Tambahkan aturan di Nginx/Apache untuk memblokir akses ke semua file yang dimulai dengan titik (<code>.*</code>).</p>
+            <p>2. <strong>Pindahkan Config:</strong> Jangan taruh file konfigurasi di folder <code>public_html</code> atau <code>www</code>. Taruh di direktori satu level di atasnya.</p>
+            <p>3. <strong>Environment Variables Server:</strong> Set variabel langsung di konfigurasi OS atau dashboard hosting, jangan bergantung pada file fisik di produksi.</p>
+
+            <div class="cta-box">
+                <h3>🚀 Audit File Config Anda</h3>
+                <p>Apakah server Anda mengekspos rahasia perusahaan? Gunakan Dork King untuk memverifikasi.</p>
+                <a href="../index.html" class="cta-btn">Ke Generator Dork King</a>
+            </div>
+
+        </article>
+
+        <footer style="margin-top: 80px; border-top: 1px solid #30363d; padding-top: 40px; text-align: center;">
+            <p style="color: #8b949e; font-size: 0.9rem;">© 2026 Dork King Academy. <em>Protect Your Secrets.</em></p>
+            <p>
+                <a href="index.html" style="color: #58a6ff; text-decoration: none; margin: 0 10px;">← Kembali ke Kurikulum</a>
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
