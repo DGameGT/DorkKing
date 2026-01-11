@@ -30,6 +30,7 @@
 - **Dual Mode System** - Switch between Target Domain mode and Free Input mode
 - **24 Quick Operators** - Industry-leading operator coverage with one-click insertion
 - **150+ Dork Patterns** - Most comprehensive collection organized in 20 categories
+- **Enterprise Features** - Batch Search, Presets, Share Query, Export Results
 - **100% Client-Side** - No data sent to any server, complete privacy
 - **Real-Time Preview** - See your query before executing
 
@@ -438,10 +439,20 @@ We welcome contributions! Here's how you can help:
 - ✨ **IMPROVED:** Real-time query preview
 - ✨ **IMPROVED:** Dedicated search button
 - ✨ **IMPROVED:** Better operator organization
-- 🐛 **FIXED:** Syntax errors in dork data
-- 📝 **CHANGED:** Rebranded from "DorkSearch PRO" to "Dork King"
+### v2.5.0 (2026-01-11) - **Enterprise Edition** 👑
+**Major Feature Update:**
+- 🔥 **NEW:** **Batch Search Generator** - Run dorks against multiple domains at once
+- 🔥 **NEW:** **Save/Load Presets** - Save your favorite queries (Local & File Export)
+- 🔥 **NEW:** **Query Validator** - Real-time syntax checking & warnings
+- 🔥 **NEW:** **Share Query** - Generate shareable links for collaboration
+- 🔥 **NEW:** **Export Results** - Export queries to JSON, CSV, MD, or TXT
+- 🔥 **NEW:** **UI Overhaul** - New Navbar, Burger Menu, and Dork Search Filter
+- ✨ **IMPROVED:** Copy & Favorite dorks (Star system)
+- ✨ **IMPROVED:** Toast notifications system
 
-### v1.0.0 (2025) - Initial Release
+### v2.0.0 (2026-01-11) - **Dork King Edition** 👑
+**Major Overhaul:**
+- 🔥 **NEW:** Revolutionary Query Builder System
 - Basic dork categories
 - Simple click-to-search interface
 - Core functionality

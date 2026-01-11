@@ -322,6 +322,14 @@ document.addEventListener('DOMContentLoaded', () => {
   renderButtons();
   setupEventListeners();
   setupAccessibility();
+  
+  // Phase 2 Initialization
+  const target = document.getElementById('target');
+  if(target) {
+      target.addEventListener('input', validateQuery);
+  }
+  document.getElementById('validator-toggle').checked = validatorEnabled;
+  loadSharedQuery();
 });
 
 
@@ -329,29 +337,95 @@ function renderButtons() {
   const container = document.getElementById('dorks-container');
   
   if (!container) {
-    console.error('Dorks container not found');
+    console.error('Dork container not found');
     return;
   }
   
   container.innerHTML = ''; 
   
-  dorksData.forEach(category => {
+  // Prepare data with Favorites if they exist
+  let displayData = [...dorksData];
+  
+  // Filter favorites
+  if (favoriteDorks && favoriteDorks.length > 0) {
+      const favItems = [];
+      dorksData.forEach(cat => {
+          cat.items.forEach(item => {
+              if (favoriteDorks.includes(item.dork)) {
+                  // Prevent duplicates in favorites list if same dork exists in multiple categories
+                  if (!favItems.some(f => f.dork === item.dork)) {
+                      favItems.push(item);
+                  }
+              }
+          });
+      });
+      
+      if (favItems.length > 0) {
+          displayData.unshift({
+              category: "⭐ Favorites",
+              items: favItems
+          });
+      }
+  }
+  
+  displayData.forEach(category => {
     const card = document.createElement('div');
     card.className = 'card';
     card.setAttribute('role', 'region');
     card.setAttribute('aria-label', category.category);
+    // Add data attribute for styling
+    if (category.category === "⭐ Favorites") {
+        card.setAttribute('data-category', 'Favorites');
+    }
     
     const title = document.createElement('h3');
     title.textContent = category.category;
     card.appendChild(title);
 
     category.items.forEach(item => {
+      // Wrapper
+      const wrapper = document.createElement('div');
+      wrapper.className = 'dork-item';
+
+      // Main Dork Button
       const btn = document.createElement('button');
+      btn.className = 'dork-btn';
       btn.textContent = item.label;
       btn.setAttribute('aria-label', `Add ${item.label} to query`);
       btn.setAttribute('data-dork', item.dork);
-      btn.onclick = () => addDorkToQuery(item.dork); // Changed from updateAndSearch
-      card.appendChild(btn);
+      btn.onclick = () => addDorkToQuery(item.dork);
+      
+      // Actions
+      const actions = document.createElement('div');
+      actions.className = 'dork-actions';
+      
+      // Copy Button
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'action-btn copy-icon';
+      copyBtn.innerHTML = '📋';
+      copyBtn.title = 'Copy to clipboard';
+      copyBtn.onclick = (e) => {
+          e.stopPropagation();
+          copyDorkToClipboard(item.dork);
+      };
+
+      // Star Button
+      const isFav = favoriteDorks.includes(item.dork);
+      const starBtn = document.createElement('button');
+      starBtn.className = `action-btn star-icon ${isFav ? 'active' : ''}`;
+      starBtn.innerHTML = isFav ? '⭐' : '☆';
+      starBtn.title = isFav ? 'Remove from favorites' : 'Add to favorites';
+      starBtn.onclick = (e) => {
+          e.stopPropagation();
+          toggleFavorite(item.dork);
+      };
+
+      actions.appendChild(copyBtn);
+      actions.appendChild(starBtn);
+
+      wrapper.appendChild(btn);
+      wrapper.appendChild(actions);
+      card.appendChild(wrapper);
     });
 
     container.appendChild(card);
@@ -402,6 +476,7 @@ function setupEventListeners() {
 
 // Global state
 let currentMode = 'domain'; // 'domain' or 'free'
+let favoriteDorks = JSON.parse(localStorage.getItem('dorkking_favorites')) || [];
 
 function setupAccessibility() {
   if (!document.getElementById('aria-live-region')) {
@@ -704,7 +779,29 @@ function executeSearch(query) {
 
 
 function showNotification(message, type = 'info') {
-  alert(message);
+  // Remove existing toast if any
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  
+  if (type === 'error') toast.style.backgroundColor = 'var(--error-color)';
+  if (type === 'warning') toast.style.backgroundColor = 'var(--warning-color)';
+  
+  document.body.appendChild(toast);
+  
+  // Trigger reflow
+  toast.offsetHeight;
+  
+  toast.classList.add('show');
+  
+  setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+  }, 3000);
+  
   announceToScreenReader(message);
 }
 
@@ -726,4 +823,550 @@ window.insertQuotes = insertQuotes;
 window.addDorkToQuery = addDorkToQuery;
 window.executeQuery = executeQuery;
 window.runCustomDork = runCustomDork;
+window.toggleFavorite = toggleFavorite;
+window.copyDorkToClipboard = copyDorkToClipboard;
+
+function toggleFavorite(dork) {
+    const index = favoriteDorks.indexOf(dork);
+    if (index === -1) {
+        favoriteDorks.push(dork);
+        showNotification('⭐ Added to Favorites');
+    } else {
+        favoriteDorks.splice(index, 1);
+        showNotification('Removed from Favorites');
+    }
+    localStorage.setItem('dorkking_favorites', JSON.stringify(favoriteDorks));
+    renderButtons();
+}
+
+
+// --- Preset Management Logic ---
+
+let savedPresets = JSON.parse(localStorage.getItem('dorkking_presets')) || [];
+
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.add('active');
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('active');
+}
+
+function openSavePresetModal() {
+    openModal('save-preset-modal');
+    setTimeout(() => document.getElementById('preset-name').focus(), 100);
+}
+
+function openPresetManager() {
+    renderPresets();
+    openModal('preset-manager-modal');
+}
+
+function saveCurrentPreset() {
+    const nameInput = document.getElementById('preset-name');
+    const name = nameInput.value.trim();
+    
+    if (!name) {
+        showNotification('Please enter a preset name', 'warning');
+        nameInput.focus();
+        return;
+    }
+    
+    const targetInput = document.getElementById('target');
+    const query = targetInput.value;
+    
+    // Generate simple ID
+    const id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+    
+    const preset = {
+        id: id,
+        name: name,
+        mode: currentMode,
+        query: query,
+        created: new Date().toISOString()
+    };
+    
+    savedPresets.push(preset);
+    localStorage.setItem('dorkking_presets', JSON.stringify(savedPresets));
+    
+    showNotification('✅ Preset saved successfully!');
+    closeModal('save-preset-modal');
+    nameInput.value = '';
+}
+
+function loadPreset(id) {
+    const preset = savedPresets.find(p => p.id === id);
+    if (!preset) return;
+    
+    if (preset.mode !== currentMode) {
+        switchMode(preset.mode);
+    }
+    
+    const targetInput = document.getElementById('target');
+    targetInput.value = preset.query;
+    updateQueryPreview();
+    
+    showNotification(`📂 Loaded preset: ${preset.name}`);
+    closeModal('preset-manager-modal');
+}
+
+function deletePreset(id) {
+    if (!confirm('Are you sure you want to delete this preset?')) return;
+    
+    savedPresets = savedPresets.filter(p => p.id !== id);
+    localStorage.setItem('dorkking_presets', JSON.stringify(savedPresets));
+    renderPresets();
+    showNotification('Preset deleted');
+}
+
+function renderPresets() {
+    const list = document.getElementById('presets-list');
+    if (!list) return;
+    
+    list.innerHTML = '';
+    
+    if (savedPresets.length === 0) {
+        list.innerHTML = '<div class="empty-state">No saved presets yet.</div>';
+        return;
+    }
+    
+    // Sort by newest first
+    const sorted = [...savedPresets].reverse();
+    
+    sorted.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'preset-item';
+        
+        const modeLabel = p.mode === 'domain' ? '🌐 DOMAIN' : '📝 FREE';
+        
+        item.innerHTML = `
+            <div class="preset-info">
+                <h4>${p.name}</h4>
+                <p><span class="highlight" style="font-size:0.75rem; border:1px solid #30363d; padding:2px 5px; border-radius:4px;">${modeLabel}</span> ${p.query ? p.query.substring(0, 40) + (p.query.length>40?'...':'') : '(empty)'}</p>
+            </div>
+            <div class="preset-actions">
+                <button class="preset-btn btn-primary" onclick="loadPreset('${p.id}')">Load</button>
+                <button class="preset-btn btn-danger" onclick="deletePreset('${p.id}')">Delete</button>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+}
+
+function exportPresets() {
+    if (savedPresets.length === 0) {
+        showNotification('No presets to export', 'warning');
+        return;
+    }
+    
+    const data = {
+        tool: "Dork King",
+        version: "2.5.0",
+        exported: new Date().toISOString(),
+        presets: savedPresets
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dorkking-presets-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification('⬇️ Presets exported to file!');
+}
+
+function importPresets(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.presets && Array.isArray(data.presets)) {
+                let count = 0;
+                data.presets.forEach(p => {
+                    // Avoid duplicates by ID
+                    if (!savedPresets.some(existing => existing.id === p.id)) {
+                        savedPresets.push(p);
+                        count++;
+                    }
+                });
+                
+                localStorage.setItem('dorkking_presets', JSON.stringify(savedPresets));
+                renderPresets();
+                showNotification(`✅ Imported ${count} new presets!`);
+            } else {
+                showNotification('Invalid preset file format', 'error');
+            }
+        } catch (err) {
+            console.error(err);
+            showNotification('Failed to parse file', 'error');
+        }
+    };
+    reader.readAsText(file);
+    input.value = ''; // Reset file input
+}
+
+// Export new functions
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.openSavePresetModal = openSavePresetModal;
+window.openPresetManager = openPresetManager;
+window.saveCurrentPreset = saveCurrentPreset;
+window.loadPreset = loadPreset;
+window.deletePreset = deletePreset;
+window.exportPresets = exportPresets;
+window.importPresets = importPresets;
+
+window.generateShareURL = generateShareURL;
+window.copyShareURL = copyShareURL;
+window.toggleValidator = toggleValidator;
+window.openExportModal = openExportModal;
+window.exportResult = exportResult;
+
+
+// --- Phase 2: Advanced Features Logic ---
+
+// 1. Share Query
+function generateShareURL() {
+    const targetInput = document.getElementById('target');
+    const query = targetInput.value.trim();
+    
+    if (!query) {
+        showNotification('Enter a query first to share', 'warning');
+        return;
+    }
+    
+    const params = new URLSearchParams();
+    params.set('q', btoa(query)); // Basic encoding
+    params.set('m', currentMode);
+    
+    const shareUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${params.toString()}`;
+    
+    const shareInput = document.getElementById('share-url-input');
+    shareInput.value = shareUrl;
+    
+    openModal('share-modal');
+}
+
+function copyShareURL() {
+    const shareInput = document.getElementById('share-url-input');
+    shareInput.select();
+    
+    navigator.clipboard.writeText(shareInput.value).then(() => {
+        showNotification('Link copied to clipboard!');
+    }).catch(() => {
+        document.execCommand('copy'); // Fallback
+        showNotification('Link copied to clipboard!');
+    });
+}
+
+function loadSharedQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const encodedQuery = params.get('q');
+    const mode = params.get('m');
+    
+    if (encodedQuery && mode) {
+        try {
+            const query = atob(encodedQuery);
+            if (mode === 'domain' || mode === 'free') {
+                switchMode(mode);
+            }
+            const targetInput = document.getElementById('target');
+            targetInput.value = query;
+            updateQueryPreview();
+            showNotification('🔗 Shared query loaded!');
+            
+            // Clean URL without reload
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } catch (e) {
+            console.error('Failed to parse shared URL', e);
+        }
+    }
+}
+
+// 2. Export Results
+function openExportModal() {
+    openModal('export-modal');
+}
+
+function exportResult(format) {
+    const targetInput = document.getElementById('target');
+    const query = targetInput.value.trim();
+    
+    if (!query) {
+        showNotification('No query to export', 'warning');
+        return;
+    }
+    
+    let content = '';
+    let mimeType = 'text/plain';
+    let extension = 'txt';
+    let filename = `dork-export-${new Date().toISOString().slice(0,10)}`;
+    
+    const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    
+    switch(format) {
+        case 'json':
+            content = JSON.stringify({
+                tool: "Dork King",
+                date: new Date().toISOString(),
+                query: query,
+                google_url: googleUrl,
+                mode: currentMode
+            }, null, 2);
+            mimeType = 'application/json';
+            extension = 'json';
+            break;
+        case 'csv':
+            content = `Date,Query,Mode,URL\n"${new Date().toISOString()}","${query.replace(/"/g, '""')}","${currentMode}","${googleUrl}"`;
+            mimeType = 'text/csv';
+            extension = 'csv';
+            break;
+        case 'md':
+            content = `# Dork King Export\n\n**Date:** ${new Date().toLocaleString()}\n**Query:** \`${query}\`\n**Mode:** ${currentMode}\n\n[Open in Google](${googleUrl})`;
+            mimeType = 'text/markdown';
+            extension = 'md';
+            break;
+        default: // txt
+            content = `Query: ${query}\nURL: ${googleUrl}`;
+            break;
+    }
+    
+    const blob = new Blob([content], {type: mimeType});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    closeModal('export-modal');
+    showNotification(`Exported as .${extension}`);
+}
+
+// 3. Validator
+let validatorEnabled = localStorage.getItem('dorkking_validator') === 'true';
+
+function toggleValidator() {
+    validatorEnabled = document.getElementById('validator-toggle').checked;
+    localStorage.setItem('dorkking_validator', validatorEnabled);
+    
+    if (validatorEnabled) {
+        validateQuery();
+    } else {
+        const warningBox = document.getElementById('validator-warnings');
+        warningBox.classList.remove('visible');
+    }
+}
+
+function validateQuery() {
+    if (!validatorEnabled) return;
+    
+    const targetInput = document.getElementById('target');
+    const query = targetInput.value.trim();
+    const warningBox = document.getElementById('validator-warnings');
+    
+    if (!query) {
+        warningBox.classList.remove('visible');
+        return;
+    }
+    
+    const warnings = [];
+    
+    // Check 1: Length (Google limit is around 2048 characters, 32 words)
+    if (query.length > 2000) {
+        warnings.push("Query is close to Google's character limit (2048 chars).");
+    }
+    
+    const wordCount = query.split(/\s+/).length;
+    if (wordCount > 32) {
+        warnings.push(`Query has ${wordCount} terms. Google ignores terms after the 32nd word.`);
+    }
+    
+    // Check 2: Conflicting operators
+    if (query.includes('allintext:') && query.includes('allinurl:')) {
+        warnings.push("Mixing `allintext` and `allinurl` usually results in zero hits.");
+    }
+    
+    // Check 3: Empty operators
+    const operators = ['inurl:', 'intitle:', 'intext:', 'filetype:'];
+    operators.forEach(op => {
+        const regex = new RegExp(`${op}\\s`, 'i'); 
+        if (regex.test(query)) {
+            warnings.push(`Operator <code>${op}</code> seems to have a space after it. Remove the space.`);
+        }
+    });
+
+    if (warnings.length > 0) {
+        warningBox.innerHTML = `<strong>⚠️ Validator Warnings:</strong><ul>${warnings.map(w => `<li>${w}</li>`).join('')}</ul>`;
+        warningBox.classList.add('visible');
+    } else {
+        warningBox.classList.remove('visible');
+    }
+}
+
+
+// --- Phase 3: Batch Search Logic ---
+
+let batchResults = [];
+
+function openBatchModal() {
+    openModal('batch-modal');
+}
+
+function generateBatchLinks() {
+    const targetsText = document.getElementById('batch-targets').value;
+    const dork = document.getElementById('batch-dork').value.trim();
+    
+    const targets = targetsText.split('\n').map(t => t.trim()).filter(t => t);
+    
+    if (targets.length === 0) { showNotification('Enter at least one target domain', 'warning'); return; }
+    if (!dork) { showNotification('Enter a dork pattern', 'warning'); return; }
+    
+    batchResults = [];
+    const output = document.getElementById('batch-output');
+    output.innerHTML = '';
+    
+    targets.forEach(domain => {
+        // Simple clean logic
+        let clean = domain.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '');
+        
+        let query = '';
+        if (dork.includes('site:')) {
+             query = `${dork} site:${clean}`; // Append if dork is custom
+        } else {
+             query = `site:${clean} ${dork}`;
+        }
+        
+        const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        batchResults.push({domain: clean, query: query, url: url});
+        
+        const linkDiv = document.createElement('div');
+        linkDiv.style.marginBottom = '8px';
+        linkDiv.style.padding = '8px';
+        linkDiv.style.background = 'rgba(255,255,255,0.05)';
+        linkDiv.style.borderRadius = '4px';
+        linkDiv.style.fontSize = '0.9rem';
+        
+        linkDiv.innerHTML = `
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:var(--accent-green); font-weight:bold;">${clean}</span>
+                <a href="${url}" target="_blank" style="color:#58a6ff; text-decoration:none;">Open ↗</a>
+            </div>
+            <div style="color:var(--text-muted); font-size:0.85em; font-family:'Roboto Mono', monospace;">${dork}</div>
+        `;
+        output.appendChild(linkDiv);
+    });
+    
+    document.getElementById('batch-count').textContent = batchResults.length;
+    document.getElementById('batch-results-area').classList.remove('hidden');
+    showNotification(`Generated ${batchResults.length} search links!`);
+}
+
+function exportBatchCSV() {
+    if (batchResults.length === 0) return;
+    
+    // CSV Header
+    let csv = "Domain,Query,Search_URL\n";
+    
+    batchResults.forEach(r => {
+        // Escape quotes
+        const q = r.query.replace(/"/g, '""');
+        csv += `"${r.domain}","${q}","${r.url}"\n`;
+    });
+    
+    const blob = new Blob([csv], {type: 'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `batch_dorks_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification('Batch results exported to CSV');
+}
+
+// Export Phase 3 Functions
+window.openBatchModal = openBatchModal;
+window.generateBatchLinks = generateBatchLinks;
+window.exportBatchCSV = exportBatchCSV;
+
+
+// --- Phase 4: UI/UX Refinement Logic ---
+
+function toggleMenu() {
+    const sidebar = document.getElementById('nav-sidebar');
+    const overlay = document.querySelector('.modal-overlay'); // Reuse overlay if we want, or just sidebar
+    
+    sidebar.classList.toggle('active');
+    
+    // Close sidebar when clicking outside (optional simple implementation)
+    if (sidebar.classList.contains('active')) {
+        document.addEventListener('click', closeMenuOutside);
+    } else {
+        document.removeEventListener('click', closeMenuOutside);
+    }
+}
+
+function closeMenuOutside(e) {
+    const sidebar = document.getElementById('nav-sidebar');
+    const burgerBtn = document.querySelector('.burger-btn');
+    
+    if (!sidebar.contains(e.target) && !burgerBtn.contains(e.target)) {
+        sidebar.classList.remove('active');
+        document.removeEventListener('click', closeMenuOutside);
+    }
+}
+
+function filterDorks() {
+    const input = document.getElementById('dork-search');
+    const filter = input.value.toLowerCase();
+    
+    const cards = document.querySelectorAll('.card');
+    let hasVisibleDorks = false;
+
+    cards.forEach(card => {
+        let cardHasMatch = false;
+        const dorkItems = card.querySelectorAll('.dork-item');
+        
+        dorkItems.forEach(item => {
+            const btn = item.querySelector('.dork-btn');
+            const label = btn.textContent.toLowerCase();
+            const dork = btn.getAttribute('data-dork').toLowerCase();
+            
+            if (label.includes(filter) || dork.includes(filter)) {
+                item.classList.remove('hidden-item');
+                cardHasMatch = true;
+                hasVisibleDorks = true;
+                
+                // Highlight match logic (optional, keeping simple for now)
+            } else {
+                item.classList.add('hidden-item');
+            }
+        });
+        
+        if (cardHasMatch) {
+            card.classList.remove('hidden-item');
+        } else {
+            card.classList.add('hidden-item');
+        }
+    });
+
+}
+
+// Export Phase 4 Functions
+window.toggleMenu = toggleMenu;
+window.filterDorks = filterDorks;
 

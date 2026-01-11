@@ -131,16 +131,57 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Dork<span class="highlight">King</span> 👑 Google Dorks Generator</h1>
+        <header class="main-header">
+            <div class="navbar">
+                <div class="brand">
+                    <h1>Dork<span class="highlight">King</span> 👑</h1>
+                </div>
+                <button class="burger-btn" onclick="toggleMenu()" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
             
-            <p class="subtitle">Professional-Grade Passive Reconnaissance Tool for Security Researchers & Bug Bounty Hunters</p>
-            <p class="tagline">Generate powerful Google Dorks instantly • 100% Client-Side Processing • Privacy-Focused</p>
+            <div id="nav-sidebar" class="nav-sidebar">
+                <div class="sidebar-header">
+                    <h3>Menu</h3>
+                    <button class="close-sidebar" onclick="toggleMenu()">×</button>
+                </div>
+                <div class="sidebar-content">
+                    <div class="menu-group">
+                        <label>Presets</label>
+                        <button class="menu-item" onclick="openSavePresetModal(); toggleMenu()">💾 Save Preset</button>
+                        <button class="menu-item" onclick="openPresetManager(); toggleMenu()">📂 Load / Manage</button>
+                    </div>
+                    
+                    <div class="menu-group">
+                        <label>Tools</label>
+                        <button class="menu-item" onclick="generateShareURL(); toggleMenu()">🔗 Share Query</button>
+                        <button class="menu-item" onclick="openExportModal(); toggleMenu()">📤 Export Results</button>
+                        <button class="menu-item" onclick="openBatchModal(); toggleMenu()">🚀 Batch Generator</button>
+                    </div>
+                    
+                    <div class="menu-group">
+                        <label>Settings</label>
+                        <div class="menu-item-toggle">
+                            <span>🛡️ Validator</span>
+                            <label class="switch">
+                                <input type="checkbox" id="validator-toggle" onchange="toggleValidator()">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="menu-footer">
+                        <a href="academy/index.html">🎓 Academy</a>
+                        <a href="https://github.com/mitocondria40/OSINT-dork-tool" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
             
-            <nav style="margin-top: 25px; display: flex; justify-content: center; gap: 25px; font-size: 1.1rem;">
-                <a href="index.html" style="color: #fff; text-decoration: none; border-bottom: 2px solid #2ea043; padding-bottom: 5px; font-weight: 700;">Tool</a>
-                <a href="academy/index.html" style="color: #8b949e; text-decoration: none; padding-bottom: 5px; transition: color 0.3s ease;">🎓 Academy</a>
-            </nav>
+            <div class="header-content">
+                <p class="subtitle">Professional-Grade Passive Reconnaissance Tool</p>
+                <p class="tagline">Generate powerful Google Dorks instantly • 100% Client-Side • Privacy-Focused</p>
+            </div>
         </header>
 
         <main>
@@ -208,9 +249,14 @@
                 </div>
 
                 <!-- Search Button -->
-                <button class="search-btn" id="search-btn" onclick="executeQuery()">
-                    🔍 SEARCH NOW
-                </button>
+                <div id="validator-warnings" class="validator-warnings hidden"></div>
+
+                <!-- Search Button -->
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="search-btn" id="search-btn" onclick="executeQuery()" style="width: 100%; max-width: 400px; font-size: 1.1rem; padding: 15px;">
+                        🔍 SEARCH NOW
+                    </button>
+                </div>
                 
                 <!-- Query Preview -->
                 <div id="query-preview" class="query-box hidden">
@@ -218,6 +264,14 @@
                     <button id="copy-btn" title="Copy command" aria-label="Copy to clipboard">📋 Copy</button>
                 </div>
             </section>
+
+            <!-- Dork Search Filter -->
+            <div class="dork-filter-section">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="dork-search" placeholder="Type to find dork (e.g., 'sql', 'admin', 'password')..." onkeyup="filterDorks()">
+                </div>
+            </div>
 
             <section class="dorks-grid" id="dorks-container" aria-label="Google Dork Categories">
                 </section>
@@ -323,6 +377,121 @@
                 </p>
             </div>
         </footer>
+    </div>
+
+    <!-- Save Preset Modal -->
+    <div id="save-preset-modal" class="modal-overlay">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Save Query Preset</h3>
+                <button class="close-modal" onclick="closeModal('save-preset-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <label for="preset-name">Preset Name:</label>
+                <div class="input-wrapper" style="margin-bottom: 0;">
+                    <input type="text" id="preset-name" placeholder="e.g., WordPress Recon" style="width: 100%;">
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 10px;">
+                    Saves current mode and query input.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn" onclick="closeModal('save-preset-modal')">Cancel</button>
+                <button class="search-btn" style="width: auto; margin: 0;" onclick="saveCurrentPreset()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preset Manager Modal -->
+    <div id="preset-manager-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Manage Presets</h3>
+                <button class="close-modal" onclick="closeModal('preset-manager-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="action-row" style="margin-bottom: 20px;">
+                    <button class="mode-btn" onclick="document.getElementById('import-file').click()">⬇️ Import</button>
+                    <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importPresets(this)">
+                    <button class="mode-btn" onclick="exportPresets()">⬆️ Export All</button>
+                </div>
+                <div id="presets-list">
+                    <!-- Preset items will be rendered here -->
+                    <div class="empty-state">No saved presets yet.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn" onclick="closeModal('preset-manager-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal-overlay">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Share Query</h3>
+                <button class="close-modal" onclick="closeModal('share-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom:10px; color: var(--text-muted);">Share this link to load your current query:</p>
+                <div class="input-wrapper" style="margin-bottom:15px; padding: 0;">
+                    <input type="text" id="share-url-input" readonly onclick="this.select()" style="padding: 12px; border: none; width: 100%;">
+                </div>
+                <button class="search-btn" onclick="copyShareURL()" style="margin: 0;">📋 Copy Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="export-modal" class="modal-overlay">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Export Results</h3>
+                <button class="close-modal" onclick="closeModal('export-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px; color: var(--text-muted);">Select export format:</p>
+                <div style="display: grid; gap: 10px;">
+                    <button class="mode-btn" onclick="exportResult('txt')">📄 Plain Text (.txt)</button>
+                    <button class="mode-btn" onclick="exportResult('json')">📦 JSON Data (.json)</button>
+                    <button class="mode-btn" onclick="exportResult('csv')">📊 CSV Spreadsheet (.csv)</button>
+                    <button class="mode-btn" onclick="exportResult('md')">📝 Markdown (.md)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Modal -->
+    <div id="batch-modal" class="modal-overlay">
+        <div class="modal" style="max-width: 600px; max-height: 90vh;">
+            <div class="modal-header">
+                <h3>Batch Search / Link Generator</h3>
+                <button class="close-modal" onclick="closeModal('batch-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <label style="color:var(--highlight); margin-bottom:5px; display:block; font-weight:600;">1. Enter Targets (one per line):</label>
+                <textarea id="batch-targets" rows="5" placeholder="example.com&#10;test.com&#10;site.org" style="width:100%; background:var(--bg-color); color:white; border:2px solid var(--border-color); border-radius:6px; padding:10px; font-family:'Roboto Mono', monospace; resize:vertical; font-size:0.9rem;"></textarea>
+                
+                <label style="color:var(--highlight); margin:20px 0 5px; display:block; font-weight:600;">2. Choose Dork Pattern:</label>
+                <div class="input-wrapper" style="margin-bottom:20px; padding:0;">
+                    <input type="text" id="batch-dork" placeholder="e.g., ext:php inurl:admin" style="width:100%; padding: 12px; border:none;">
+                </div>
+                
+                <button class="search-btn" onclick="generateBatchLinks()" style="margin-bottom: 20px;">Generate Links 🚀</button>
+                
+                <div id="batch-results-area" class="hidden" style="border-top:1px solid var(--border-color); padding-top:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <h4 style="color:#fff; margin:0;">Generated Links (<span id="batch-count">0</span>)</h4>
+                        <button class="mode-btn" onclick="exportBatchCSV()" style="font-size:0.8rem; padding:6px 12px; min-width:auto; width:auto;">Download CSV</button>
+                    </div>
+                    <div id="batch-output" style="max-height:200px; overflow-y:auto; background:#0d1117; padding:10px; border-radius:6px; border:1px solid var(--border-color);"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn" onclick="closeModal('batch-modal')">Close</button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
