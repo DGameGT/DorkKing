@@ -429,7 +429,9 @@
                 <h3>Manage Presets</h3>
                 <button class="close-modal" onclick="closeModal('preset-manager-modal')">×</button>
             </div>
-                        <button class="mode-btn" onclick="document.getElementById('import-file').click()">⬇️ Import</button>
+            <div class="modal-body">
+                <div class="action-row" style="margin-bottom: 20px;">
+                    <button class="mode-btn" onclick="document.getElementById('import-file').click()">⬇️ Import</button>
                     <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importPresets(this)">
                     <button class="mode-btn" onclick="exportPresets()">⬆️ Export All</button>
                 </div>
