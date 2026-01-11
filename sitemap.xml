@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://dorksearch.pro/</loc>
+    <loc>https://rajadork.dgxo.my.id/</loc>
     <lastmod>2026-01-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
-    <loc>https://dorksearch.pro/privacy.html</loc>
+    <loc>https://rajadork.dgxo.my.id/privacy.html</loc>
     <lastmod>2026-01-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://dorksearch.pro/academy/</loc>
+    <loc>https://rajadork.dgxo.my.id/academy/</loc>
     <lastmod>2026-01-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://dorksearch.pro/academy/what-is-osint.html</loc>
+    <loc>https://rajadork.dgxo.my.id/academy/what-is-osint.html</loc>
     <lastmod>2026-01-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://dorksearch.pro/academy/top-10-dorks.html</loc>
+    <loc>https://rajadork.dgxo.my.id/academy/top-10-dorks.html</loc>
     <lastmod>2026-01-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://dorksearch.pro/academy/defensive-dorking.html</loc>
+    <loc>https://rajadork.dgxo.my.id/academy/defensive-dorking.html</loc>
     <lastmod>2026-01-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
